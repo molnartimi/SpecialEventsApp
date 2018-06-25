@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import hu.molti.specialevents.entities.PersonEntity;
 import hu.molti.specialevents.lists.PersonListAdapter;
 
-public class PersonListActivity extends AppCompatActivity {
+public class PersonListActivity extends AppCompatActivity implements NewPersonDialogFragment.NewPersonDialogListener {
     private Toolbar toolbar;
     private FloatingActionButton fab;
     private RecyclerView recyclerView;
@@ -32,17 +32,18 @@ public class PersonListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_person_list);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        createFloatingActionBtn();
+        initRecycleView();
+    }
 
+    private void createFloatingActionBtn() {
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                new NewPersonDialogFragment().show(getSupportFragmentManager(), "DialogFragment");
             }
         });
-
-        initRecycleView();
     }
 
     @Override
@@ -65,6 +66,11 @@ public class PersonListActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDialogPositiveClick(PersonEntity newPerson) {
+        this.personListAdapter.addPerson(newPerson);
     }
 
     private void initRecycleView() {

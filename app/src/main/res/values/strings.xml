@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Special Events</string>
     <string name="action_settings">Settings</string>
+    <string name="person_name">Név</string>
+    <string name="save_something">Mentés</string>
+    <string name="cancel_something">Mégse</string>
+    <string name="save_person_dialog_title">Új személy mentése</string>
 </resources>
