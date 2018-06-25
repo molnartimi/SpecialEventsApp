@@ -1,5 +1,8 @@
 package hu.molti.specialevents;
 
+import android.arch.persistence.room.Database;
+import android.arch.persistence.room.Room;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,7 +19,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import hu.molti.specialevents.dao.PersonDao;
+import hu.molti.specialevents.database.PersonDatabase;
 import hu.molti.specialevents.entities.PersonEntity;
 import hu.molti.specialevents.lists.PersonListAdapter;
 
@@ -25,6 +31,7 @@ public class PersonListActivity extends AppCompatActivity implements NewPersonDi
     private FloatingActionButton fab;
     private RecyclerView recyclerView;
     private PersonListAdapter personListAdapter;
+    private PersonDao personDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +40,8 @@ public class PersonListActivity extends AppCompatActivity implements NewPersonDi
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         createFloatingActionBtn();
+        personDao = Room.databaseBuilder(getApplicationContext(),
+                PersonDatabase.class, "person-db").build().PersonDao();
         initRecycleView();
     }
 
@@ -69,23 +78,28 @@ public class PersonListActivity extends AppCompatActivity implements NewPersonDi
     }
 
     @Override
-    public void onDialogPositiveClick(PersonEntity newPerson) {
-        this.personListAdapter.addPerson(newPerson);
+    public void onDialogPositiveClick(final PersonEntity newPerson) {
+        personListAdapter.addPerson(newPerson);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                personDao.insert(newPerson);
+                return null;
+            }
+        }.execute();
     }
 
-    private void initRecycleView() {
-        recyclerView = findViewById(R.id.person_recycler_view);
-        personListAdapter = new PersonListAdapter(new ArrayList<PersonEntity>());
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setAdapter(personListAdapter);
-
-        loadDatas();
-    }
-
-    private void loadDatas() {
-        // TODO database
-        personListAdapter.addPerson(new PersonEntity("Tomi"));
-        personListAdapter.addPerson(new PersonEntity("Luca"));
+    public void initRecycleView() {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                recyclerView = findViewById(R.id.person_recycler_view);
+                personListAdapter = new PersonListAdapter(personDao.getAll());
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.setAdapter(personListAdapter);
+                return null;
+            }
+        }.execute();
     }
 }

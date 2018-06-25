@@ -6,15 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import hu.molti.specialevents.R;
 import hu.molti.specialevents.entities.PersonEntity;
 
 public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.PersonViewHolder>  {
-    private final ArrayList<PersonEntity> persons;
+    private final List<PersonEntity> persons;
 
-    public PersonListAdapter(ArrayList<PersonEntity> persons) {
+    public PersonListAdapter(List<PersonEntity> persons) {
         this.persons = persons;
     }
 
