@@ -1,32 +1,24 @@
 package hu.molti.specialevents;
 
-import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import hu.molti.specialevents.dao.PersonDao;
 import hu.molti.specialevents.database.PersonDatabase;
 import hu.molti.specialevents.entities.PersonEntity;
 import hu.molti.specialevents.lists.PersonListAdapter;
 
-public class PersonListActivity extends AppCompatActivity implements NewPersonDialogFragment.NewPersonDialogListener {
+public class PersonListActivity extends AppCompatActivity
+        implements NewPersonDialogFragment.NewPersonDialogListener, PersonListAdapter.PersonIsDeletedListener {
     private Toolbar toolbar;
     private FloatingActionButton fab;
     private RecyclerView recyclerView;
@@ -90,14 +82,26 @@ public class PersonListActivity extends AppCompatActivity implements NewPersonDi
     }
 
     public void initRecycleView() {
+        final PersonListActivity listenerActivity = this;
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
                 recyclerView = findViewById(R.id.person_recycler_view);
-                personListAdapter = new PersonListAdapter(personDao.getAll());
+                personListAdapter = new PersonListAdapter(personDao.getAll(), listenerActivity);
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
                 recyclerView.setLayoutManager(mLayoutManager);
                 recyclerView.setAdapter(personListAdapter);
+                return null;
+            }
+        }.execute();
+    }
+
+    @Override
+    public void deletePerson(final PersonEntity person) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                personDao.delete(person);
                 return null;
             }
         }.execute();

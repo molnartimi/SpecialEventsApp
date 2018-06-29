@@ -17,7 +17,6 @@ public class PersonEntity {
     @PrimaryKey
     @NonNull
     private String id;
-    @ColumnInfo(name = "name")
     private String name;
 
     public PersonEntity(String name) {
