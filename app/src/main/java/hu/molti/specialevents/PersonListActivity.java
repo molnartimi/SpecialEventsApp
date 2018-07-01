@@ -9,8 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import hu.molti.specialevents.dao.PersonDao;
 import hu.molti.specialevents.database.PersonDatabase;
@@ -19,8 +17,6 @@ import hu.molti.specialevents.lists.PersonListAdapter;
 
 public class PersonListActivity extends AppCompatActivity
         implements NewPersonDialogFragment.NewPersonDialogListener, PersonListAdapter.PersonIsDeletedListener {
-    private Toolbar toolbar;
-    private FloatingActionButton fab;
     private RecyclerView recyclerView;
     private PersonListAdapter personListAdapter;
     private PersonDao personDao;
@@ -29,44 +25,26 @@ public class PersonListActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_list);
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        createToolbar();
         createFloatingActionBtn();
         personDao = Room.databaseBuilder(getApplicationContext(),
                 PersonDatabase.class, "person-db").build().PersonDao();
         initRecycleView();
     }
 
+    private void createToolbar() {
+        Toolbar toolbar = findViewById(R.id.person_list_toolbar);
+        toolbar.setTitle(R.string.toolbarTitle);
+    }
+
     private void createFloatingActionBtn() {
-        fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.add_person_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new NewPersonDialogFragment().show(getSupportFragmentManager(), "DialogFragment");
             }
         });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_person_list, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
