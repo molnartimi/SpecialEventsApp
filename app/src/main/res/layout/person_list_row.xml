@@ -1,5 +1,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:padding="5dp"
@@ -14,11 +15,21 @@
         android:textSize="25sp"
         android:padding="10dp"/>
 
-    <Button
-        android:id="@+id/delete_person_btn"
+    <LinearLayout
+        android:id="@+id/person_list_row_buttons_layout"
         android:layout_weight="0.5"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:padding="5dp"
-        android:text="@string/delete"/>
+        android:gravity="end">
+
+        <ImageButton
+            android:id="@+id/delete_person_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            app:srcCompat="@drawable/ic_clear_black_24dp"
+            android:contentDescription="@string/delete_text" />
+    </LinearLayout>
+
+
 </LinearLayout>

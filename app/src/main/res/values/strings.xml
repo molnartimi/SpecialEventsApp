@@ -6,5 +6,6 @@
     <string name="cancel_something">Mégse</string>
     <string name="save_person_dialog_title">Új személy mentése</string>
     <string name="delete">Del</string>
-    <string name="toolbarTitle">Emberek</string>
+    <string name="person_list_toolbar_title">Emberek</string>
+    <string name="delete_text">Törlés</string>
 </resources>

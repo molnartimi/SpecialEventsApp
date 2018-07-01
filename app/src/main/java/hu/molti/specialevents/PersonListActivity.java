@@ -34,7 +34,7 @@ public class PersonListActivity extends AppCompatActivity
 
     private void createToolbar() {
         Toolbar toolbar = findViewById(R.id.person_list_toolbar);
-        toolbar.setTitle(R.string.toolbarTitle);
+        toolbar.setTitle(R.string.person_list_toolbar_title);
     }
 
     private void createFloatingActionBtn() {
