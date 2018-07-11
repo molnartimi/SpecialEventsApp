@@ -1,6 +1,7 @@
 package hu.molti.specialevents;
 
 import android.arch.persistence.room.Room;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,7 +9,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import hu.molti.specialevents.dao.PersonDao;
 import hu.molti.specialevents.database.PersonDatabase;
@@ -32,9 +37,29 @@ public class PersonListActivity extends AppCompatActivity
         initRecycleView();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_events:
+                startActivity(new Intent(this, EventListActivity.class));
+                break;
+            default:
+                break;
+        }
+
+        return true;
+    }
+
     private void createToolbar() {
         Toolbar toolbar = findViewById(R.id.person_list_toolbar);
-        toolbar.setTitle(R.string.person_list_toolbar_title);
+        setSupportActionBar(toolbar);
     }
 
     private void createFloatingActionBtn() {
