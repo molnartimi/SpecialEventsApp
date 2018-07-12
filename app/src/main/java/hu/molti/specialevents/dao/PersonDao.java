@@ -29,9 +29,6 @@ public interface PersonDao {
     void updatePerson(PersonEntity personEntity);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(PersonEntity... PersonEntitys);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(PersonEntity personEntity);
 
     @Delete

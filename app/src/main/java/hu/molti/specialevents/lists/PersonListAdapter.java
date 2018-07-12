@@ -12,19 +12,19 @@ import android.widget.TextView;
 import java.util.List;
 
 import hu.molti.specialevents.R;
+import hu.molti.specialevents.common.DataInsertedListener;
 import hu.molti.specialevents.entities.PersonEntity;
+import hu.molti.specialevents.service.PersonService;
 
-public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.PersonViewHolder>  {
+public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.PersonViewHolder>
+        implements DataInsertedListener<PersonEntity> {
     private List<PersonEntity> persons;
-    private PersonIsDeletedListener mListener;
+    private PersonService service;
 
-    public interface PersonIsDeletedListener {
-        public void deletePerson(PersonEntity person);
-    }
-
-    public PersonListAdapter(List<PersonEntity> persons, PersonIsDeletedListener listener) {
+    public PersonListAdapter(List<PersonEntity> persons) {
         this.persons = persons;
-        mListener = listener;
+        service = PersonService.getService();
+        service.setInsertedListener(this);
     }
 
     public class PersonViewHolder extends RecyclerView.ViewHolder {
@@ -64,13 +64,14 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.Pe
         return persons.size();
     }
 
-    public void addPerson(PersonEntity newPerson) {
-        persons.add(newPerson);
+    @Override
+    public void dataInserted(PersonEntity data) {
+        persons.add(data);
         notifyDataSetChanged();
     }
 
     private void removePerson(PersonEntity person) {
-        mListener.deletePerson(person);
+        service.deletePerson(person);
         persons.remove(person);
         notifyDataSetChanged();
     }

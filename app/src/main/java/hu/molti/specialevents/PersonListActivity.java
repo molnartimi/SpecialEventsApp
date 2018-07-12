@@ -1,8 +1,7 @@
 package hu.molti.specialevents;
 
-import android.arch.persistence.room.Room;
+import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -13,28 +12,31 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-import hu.molti.specialevents.dao.PersonDao;
-import hu.molti.specialevents.database.PersonDatabase;
+import java.util.List;
+
+import hu.molti.specialevents.common.DataLoadedListener;
 import hu.molti.specialevents.entities.PersonEntity;
 import hu.molti.specialevents.lists.PersonListAdapter;
+import hu.molti.specialevents.service.PersonService;
 
 public class PersonListActivity extends AppCompatActivity
-        implements NewPersonDialogFragment.NewPersonDialogListener, PersonListAdapter.PersonIsDeletedListener {
-    private RecyclerView recyclerView;
+        implements DataLoadedListener<List<PersonEntity>>{
     private PersonListAdapter personListAdapter;
-    private PersonDao personDao;
+    private PersonService service;
+    private static Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = getApplicationContext();
+
         setContentView(R.layout.activity_person_list);
         createToolbar();
         createFloatingActionBtn();
-        personDao = Room.databaseBuilder(getApplicationContext(),
-                PersonDatabase.class, "person-db").build().PersonDao();
-        initRecycleView();
+
+        service = PersonService.getService();
+        service.startLoadAllPersons(this);
     }
 
     @Override
@@ -73,40 +75,15 @@ public class PersonListActivity extends AppCompatActivity
     }
 
     @Override
-    public void onDialogPositiveClick(final PersonEntity newPerson) {
-        personListAdapter.addPerson(newPerson);
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                personDao.insert(newPerson);
-                return null;
-            }
-        }.execute();
+    public void dataIsLoaded(List<PersonEntity> data) {
+        RecyclerView recyclerView = findViewById(R.id.person_recycler_view);
+        personListAdapter = new PersonListAdapter(data);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setAdapter(personListAdapter);
     }
 
-    public void initRecycleView() {
-        final PersonListActivity listenerActivity = this;
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                recyclerView = findViewById(R.id.person_recycler_view);
-                personListAdapter = new PersonListAdapter(personDao.getAll(), listenerActivity);
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-                recyclerView.setLayoutManager(mLayoutManager);
-                recyclerView.setAdapter(personListAdapter);
-                return null;
-            }
-        }.execute();
-    }
-
-    @Override
-    public void deletePerson(final PersonEntity person) {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                personDao.delete(person);
-                return null;
-            }
-        }.execute();
+    public static Context getContext() {
+        return mContext;
     }
 }
