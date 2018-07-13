@@ -14,4 +14,8 @@
     <string name="day_label">Nap:</string>
     <string name="person_label">Személy:</string>
     <string name="loading">Loading...</string>
+    <string name="event_type_label">Esemény:</string>
+    <string name="birthday">Születésnap</string>
+    <string name="nameday">Névnap</string>
+    <string name="anniversary">Évforduló</string>
 </resources>
