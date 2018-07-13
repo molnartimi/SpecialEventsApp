@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import java.util.List;
 import java.util.UUID;
 
-import hu.molti.specialevents.enums.EventTypeEnum;
+import hu.molti.specialevents.common.EventTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -9,22 +9,18 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.util.List;
-
 import hu.molti.specialevents.R;
-import hu.molti.specialevents.common.DataInsertedListener;
+import hu.molti.specialevents.common.DataModificationListener;
 import hu.molti.specialevents.entities.PersonEntity;
 import hu.molti.specialevents.service.PersonService;
 
 public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.PersonViewHolder>
-        implements DataInsertedListener<PersonEntity> {
-    private List<PersonEntity> persons;
+        implements DataModificationListener {
     private PersonService service;
 
-    public PersonListAdapter(List<PersonEntity> persons) {
-        this.persons = persons;
+    public PersonListAdapter() {
         service = PersonService.getService();
-        service.setInsertedListener(this);
+        service.setDataModificationListener(this);
     }
 
     public class PersonViewHolder extends RecyclerView.ViewHolder {
@@ -49,30 +45,28 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.Pe
 
     @Override
     public void onBindViewHolder(@NonNull PersonViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-        String name = persons.get(position).getName();
+        String name = service.get(position).getName();
         holder.name.setText(name);
         holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                removePerson(persons.get(position));
+                service.remove(position);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return persons.size();
+        return service.count();
     }
 
     @Override
-    public void dataInserted(PersonEntity data) {
-        persons.add(data);
+    public void inserted() {
         notifyDataSetChanged();
     }
 
-    private void removePerson(PersonEntity person) {
-        service.deletePerson(person);
-        persons.remove(person);
+    @Override
+    public void deleted() {
         notifyDataSetChanged();
     }
 }

@@ -9,4 +9,9 @@
     <string name="person_list_toolbar_title">Emberek</string>
     <string name="delete_text">Törlés</string>
     <string name="event_type_description">Esemény típusa</string>
+    <string name="save_event_dialog_title">Új esemény mentése</string>
+    <string name="month_label">Hónap:</string>
+    <string name="day_label">Nap:</string>
+    <string name="person_label">Személy:</string>
+    <string name="loading">Loading...</string>
 </resources>

@@ -20,23 +20,15 @@ import hu.molti.specialevents.entities.PersonEntity;
 import hu.molti.specialevents.lists.PersonListAdapter;
 import hu.molti.specialevents.service.PersonService;
 
-public class PersonListActivity extends AppCompatActivity
-        implements DataLoadedListener<List<PersonEntity>>{
-    private PersonListAdapter personListAdapter;
-    private PersonService service;
-    private static Context mContext;
+public class PersonListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = getApplicationContext();
-
         setContentView(R.layout.activity_person_list);
         createToolbar();
         createFloatingActionBtn();
-
-        service = PersonService.getService();
-        service.startLoadAllPersons(this);
+        initRecyclerView();
     }
 
     @Override
@@ -74,16 +66,11 @@ public class PersonListActivity extends AppCompatActivity
         });
     }
 
-    @Override
-    public void dataIsLoaded(List<PersonEntity> data) {
+    public void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.person_recycler_view);
-        personListAdapter = new PersonListAdapter(data);
+        PersonListAdapter personListAdapter = new PersonListAdapter();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(personListAdapter);
-    }
-
-    public static Context getContext() {
-        return mContext;
     }
 }

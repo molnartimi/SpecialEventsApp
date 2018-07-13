@@ -5,8 +5,8 @@ import android.os.AsyncTask;
 
 import java.util.List;
 
-import hu.molti.specialevents.PersonListActivity;
-import hu.molti.specialevents.common.DataInsertedListener;
+import hu.molti.specialevents.StartingActivity;
+import hu.molti.specialevents.common.DataModificationListener;
 import hu.molti.specialevents.common.DataLoadedListener;
 import hu.molti.specialevents.dao.PersonDao;
 import hu.molti.specialevents.database.PersonDatabase;
@@ -15,10 +15,11 @@ import hu.molti.specialevents.entities.PersonEntity;
 public class PersonService {
     private static PersonService service;
     private PersonDao db;
-    private DataInsertedListener insertedListener;
+    private List<PersonEntity> persons;
+    private DataModificationListener dataModificationListener;
 
     private PersonService() {
-        db = Room.databaseBuilder(PersonListActivity.getContext(),
+        db = Room.databaseBuilder(StartingActivity.getContext(),
                 PersonDatabase.class, "person-db").build().PersonDao();
     }
 
@@ -29,24 +30,36 @@ public class PersonService {
         return service;
     }
 
-    public void setInsertedListener(DataInsertedListener listener) {
-        insertedListener = listener;
+    public void setDataModificationListener(DataModificationListener listener) {
+        dataModificationListener = listener;
     }
 
     public void startLoadAllPersons(final DataLoadedListener callbackListener) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                List<PersonEntity> persons = db.getAll();
-                callbackListener.dataIsLoaded(persons);
+                persons = db.getAll();
+                callbackListener.dataIsLoaded();
                 return null;
             }
         }.execute();
     }
 
+    public List<PersonEntity> getPersons() {
+        return persons;
+    }
 
-    public void addPerson(final PersonEntity newPerson) {
-        insertedListener.dataInserted(newPerson);
+    public PersonEntity get(int pos) {
+        return persons.get(pos);
+    }
+
+    public int count() {
+        return persons.size();
+    }
+
+    public void add(final PersonEntity newPerson) {
+        persons.add(newPerson);
+        dataModificationListener.inserted();
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -56,11 +69,13 @@ public class PersonService {
         }.execute();
     }
 
-    public void deletePerson(final PersonEntity person) {
+    public void remove(final int pos) {
+        final PersonEntity deleted = persons.remove(pos);
+        dataModificationListener.deleted();
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                db.delete(person);
+                db.delete(deleted);
                 return null;
             }
         }.execute();
