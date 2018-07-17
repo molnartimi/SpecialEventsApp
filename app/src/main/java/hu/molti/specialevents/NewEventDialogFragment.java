@@ -6,29 +6,30 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import hu.molti.specialevents.common.DateValidator;
 import hu.molti.specialevents.common.EventTypeEnum;
+import hu.molti.specialevents.common.EventSpinnerOnSelectedListener;
+import hu.molti.specialevents.common.SpinnerHelper;
 import hu.molti.specialevents.entities.EventEntity;
-import hu.molti.specialevents.entities.PersonEntity;
+import hu.molti.specialevents.lists.PersonSelectorAdapter;
 import hu.molti.specialevents.service.EventService;
-import hu.molti.specialevents.service.PersonService;
 
 public class NewEventDialogFragment extends DialogFragment implements AdapterView.OnItemSelectedListener {
     private View dialogView;
     private Spinner typeSpinner;
     private Spinner monthSpinner;
     private Spinner daySpinner;
-    private Spinner personSpinner;
-    private PersonService personService;
+    private PersonSelectorAdapter personSelectorAdapter;
     private EventService eventService;
 
     @NonNull
@@ -36,7 +37,6 @@ public class NewEventDialogFragment extends DialogFragment implements AdapterVie
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         eventService = EventService.getService();
-        personService = PersonService.getService();
 
         final LayoutInflater inflater = getActivity().getLayoutInflater();
         dialogView = inflater.inflate(R.layout.new_event_dialog, null);
@@ -57,36 +57,45 @@ public class NewEventDialogFragment extends DialogFragment implements AdapterVie
     }
 
     private EventEntity createNewEvent() {
-        ArrayList<String> persons= new ArrayList<>();
-        persons.add(personService.get(personSpinner.getSelectedItemPosition()).getId());
         return new EventEntity(
                 monthSpinner.getSelectedItemPosition() + 1,
                 daySpinner.getSelectedItemPosition() + 1,
                 EventTypeEnum.toEventType(typeSpinner.getSelectedItemPosition()),
-                persons);
+                personSelectorAdapter.getPersonIds());
     }
 
     private void initView() {
-        typeSpinner = createSpinner(R.id.new_event_dialog_type_spinner, EventTypeEnum.stringList());
+        typeSpinner = SpinnerHelper.createSpinner(dialogView,
+                R.id.new_event_dialog_type_spinner, EventTypeEnum.stringList());
 
-        monthSpinner = createSpinner(R.id.new_event_dialog_month_spinner, getNumberListTo(12));
+        monthSpinner = SpinnerHelper.createSpinner(dialogView,
+                R.id.new_event_dialog_month_spinner, getNumberListTo(12));
         monthSpinner.setOnItemSelectedListener(this);
 
-        daySpinner = createSpinner(R.id.new_event_dialog_day_spinner, getNumberListTo(31));
+        daySpinner = SpinnerHelper.createSpinner(dialogView,
+                R.id.new_event_dialog_day_spinner, getNumberListTo(31));
 
-        personSpinner = createSpinner(R.id.new_event_dialog_person_spinner, personService.getAll());
-    }
+        initRecyclerView();
 
-    private <T> Spinner createSpinner(int viewId, List<T> values) {
-        Spinner spinner = dialogView.findViewById(viewId);
-        fillSpinner(spinner, values);
-        return spinner;
-    }
+        TextView plusPersonLink = dialogView.findViewById(R.id.new_event_dialog_plus_person_btn);
+        TextView minusPersonLink = dialogView.findViewById(R.id.new_event_dialog_minus_person_btn);
 
-    private <T> void fillSpinner(Spinner spinner, List<T> values) {
-        ArrayAdapter<T> dataAdapter = new ArrayAdapter<>(StartingActivity.getContext(),
-                android.R.layout.simple_spinner_dropdown_item, values);
-        spinner.setAdapter(dataAdapter);
+        typeSpinner.setOnItemSelectedListener(new EventSpinnerOnSelectedListener(personSelectorAdapter));
+        personSelectorAdapter.setMinusPersonLink(minusPersonLink);
+
+        plusPersonLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                personSelectorAdapter.addOne();
+            }
+        });
+        minusPersonLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                personSelectorAdapter.removeOne();
+            }
+        });
+
     }
 
     private ArrayList<Integer> getNumberListTo(int max) {
@@ -97,12 +106,20 @@ public class NewEventDialogFragment extends DialogFragment implements AdapterVie
         return numbers;
     }
 
+    public void initRecyclerView() {
+        RecyclerView recyclerView = dialogView.findViewById(R.id.person_selector_recycler_view);
+        personSelectorAdapter = new PersonSelectorAdapter();
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setAdapter(personSelectorAdapter);
+    }
+
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         int selectedMonth = (Integer) monthSpinner.getSelectedItem();
         int selectedDay = (Integer) daySpinner.getSelectedItem();
         int newMaxDay = DateValidator.getDayNum(selectedMonth);
-        fillSpinner(daySpinner, getNumberListTo(newMaxDay));
+        SpinnerHelper.fillSpinner(daySpinner, getNumberListTo(newMaxDay));
         daySpinner.setSelection(selectedDay <= newMaxDay ? selectedDay - 1 : newMaxDay - 1);
     }
 

@@ -2,6 +2,7 @@ package hu.molti.specialevents.lists;
 
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import hu.molti.specialevents.R;
+import hu.molti.specialevents.StartingActivity;
 import hu.molti.specialevents.common.DataModificationListener;
 import hu.molti.specialevents.entities.EventEntity;
 import hu.molti.specialevents.service.EventService;
@@ -19,7 +23,6 @@ import hu.molti.specialevents.service.PersonService;
 public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.EventViewHolder>
         implements DataModificationListener {
     private EventService eventService;
-    private PersonService personService;
 
     @Override
     public void changed() {
@@ -28,20 +31,19 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
 
     public EventListAdapter() {
         eventService = EventService.getService();
-        personService = PersonService.getService();
         eventService.setDataModificationListener(this);
     }
 
     public class EventViewHolder extends RecyclerView.ViewHolder {
         public TextView date;
-        public TextView name;
+        public RecyclerView personsRecyclerView;
         public ImageView icon;
         ImageButton deleteBtn;
 
         EventViewHolder(View view) {
             super(view);
             date = view.findViewById(R.id.event_list_row_date);
-            name = view.findViewById(R.id.event_list_row_name);
+            personsRecyclerView = view.findViewById(R.id.event_list_row_persons_recycler_view);
             icon = view.findViewById(R.id.event_list_row_icon);
             deleteBtn = view.findViewById(R.id.delete_event_btn);
         }
@@ -60,7 +62,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
     public void onBindViewHolder(@NonNull EventViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         EventEntity event = eventService.get(position);
         holder.date.setText(event.getDateString());
-        holder.name.setText(personService.get(event.getPersonIds().get(0)).getName()); // TODO miafranclegyen a sok emberrel
+        initRecyclerView(holder.personsRecyclerView, event.getPersonIds());
         int iconId = 0;
         switch (event.getType()) {
             case BIRTHDAY:
@@ -84,5 +86,12 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
     @Override
     public int getItemCount() {
         return eventService.count();
+    }
+
+    private void initRecyclerView(RecyclerView recyclerView, List<String> personIds) {
+        EventListRowPersonsAdapter adapter = new EventListRowPersonsAdapter(personIds);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(StartingActivity.getContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setAdapter(adapter);
     }
 }

@@ -18,4 +18,6 @@
     <string name="birthday">Születésnap</string>
     <string name="nameday">Névnap</string>
     <string name="anniversary">Évforduló</string>
+    <string name="add_plus_person"><u>Új személy hozzáadása</u></string>
+    <string name="remove_plus_person"><u>Személy eltávolítása</u></string>
 </resources>
