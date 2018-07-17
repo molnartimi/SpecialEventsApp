@@ -17,21 +17,25 @@ import java.util.List;
 
 import hu.molti.specialevents.common.DateValidator;
 import hu.molti.specialevents.common.EventTypeEnum;
+import hu.molti.specialevents.entities.EventEntity;
 import hu.molti.specialevents.entities.PersonEntity;
+import hu.molti.specialevents.service.EventService;
 import hu.molti.specialevents.service.PersonService;
 
 public class NewEventDialogFragment extends DialogFragment implements AdapterView.OnItemSelectedListener {
     private View dialogView;
+    private Spinner typeSpinner;
     private Spinner monthSpinner;
     private Spinner daySpinner;
+    private Spinner personSpinner;
     private PersonService personService;
-    //private EventService service;
+    private EventService eventService;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        //service = EventService.getService();
+        eventService = EventService.getService();
         personService = PersonService.getService();
 
         final LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -42,7 +46,7 @@ public class NewEventDialogFragment extends DialogFragment implements AdapterVie
                 .setTitle(R.string.save_event_dialog_title)
                 .setPositiveButton(R.string.save_something, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // TODO service.add(new PersonEntity(nameText.getText().toString()));
+                        eventService.add(createNewEvent());
                     }
                 })
                 .setNegativeButton(R.string.cancel_something, new DialogInterface.OnClickListener() {
@@ -52,15 +56,25 @@ public class NewEventDialogFragment extends DialogFragment implements AdapterVie
         return builder.create();
     }
 
+    private EventEntity createNewEvent() {
+        ArrayList<String> persons= new ArrayList<>();
+        persons.add(personService.get(personSpinner.getSelectedItemPosition()).getId());
+        return new EventEntity(
+                monthSpinner.getSelectedItemPosition() + 1,
+                daySpinner.getSelectedItemPosition() + 1,
+                EventTypeEnum.toEventType(typeSpinner.getSelectedItemPosition()),
+                persons);
+    }
+
     private void initView() {
-        createSpinner(R.id.new_event_dialog_type_spinner, EventTypeEnum.stringList());
+        typeSpinner = createSpinner(R.id.new_event_dialog_type_spinner, EventTypeEnum.stringList());
 
         monthSpinner = createSpinner(R.id.new_event_dialog_month_spinner, getNumberListTo(12));
         monthSpinner.setOnItemSelectedListener(this);
 
         daySpinner = createSpinner(R.id.new_event_dialog_day_spinner, getNumberListTo(31));
 
-        createSpinner(R.id.new_event_dialog_person_spinner, getPersonNameList());
+        personSpinner = createSpinner(R.id.new_event_dialog_person_spinner, personService.getAll());
     }
 
     private <T> Spinner createSpinner(int viewId, List<T> values) {
@@ -81,15 +95,6 @@ public class NewEventDialogFragment extends DialogFragment implements AdapterVie
             numbers.add(i);
         }
         return numbers;
-    }
-
-    private ArrayList<String> getPersonNameList() {
-        List<PersonEntity> persons = personService.getPersons();
-        ArrayList<String> names = new ArrayList<>();
-        for (PersonEntity person: persons) {
-            names.add(person.getName());
-        }
-        return names;
     }
 
     @Override

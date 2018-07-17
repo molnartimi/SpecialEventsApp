@@ -1,5 +1,6 @@
 package hu.molti.specialevents.common;
 
+import android.arch.persistence.room.TypeConverter;
 import android.content.res.Resources;
 
 import java.util.ArrayList;
@@ -11,16 +12,17 @@ import hu.molti.specialevents.StartingActivity;
 public enum EventTypeEnum {
     BIRTHDAY, NAMEDAY, ANNIVERSARY;
 
+    private static Resources resources = StartingActivity.getContext().getResources();
+
     @Override
     public String toString() {
-        Resources resources = StartingActivity.getContext().getResources();
         int id = 0;
         switch (this) {
             case BIRTHDAY: id = R.string.birthday; break;
             case NAMEDAY: id = R.string.nameday; break;
             case ANNIVERSARY: id = R.string.anniversary; break;
         }
-        return StartingActivity.getContext().getResources().getString(id);
+        return resources.getString(id);
     }
 
     public static List<String> stringList() {
@@ -29,5 +31,21 @@ public enum EventTypeEnum {
             strings.add(type.toString());
         }
         return strings;
+    }
+
+    @TypeConverter
+    public static EventTypeEnum toEventType(int code) {
+        return values()[code];
+    }
+
+    @TypeConverter
+    public static int toInt(EventTypeEnum obj) {
+        EventTypeEnum[] values = values();
+        for (int i = 0; i < values.length; i++) {
+            if (obj.equals(values[i])) {
+                return i;
+            }
+        }
+        return 0;
     }
 }

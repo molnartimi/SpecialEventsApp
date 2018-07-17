@@ -61,12 +61,7 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.Pe
     }
 
     @Override
-    public void inserted() {
-        notifyDataSetChanged();
-    }
-
-    @Override
-    public void deleted() {
+    public void changed() {
         notifyDataSetChanged();
     }
 }

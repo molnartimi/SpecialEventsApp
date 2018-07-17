@@ -12,9 +12,18 @@ import java.util.List;
 import hu.molti.specialevents.entities.PersonEntity;
 
 @Dao
-public interface PersonDao {
+public interface PersonDao extends IDao<PersonEntity> {
+    @Override
     @Query("SELECT * FROM PersonEntity")
     List<PersonEntity> getAll();
+
+    @Override
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(PersonEntity personEntity);
+
+    @Override
+    @Delete
+    void delete(PersonEntity PersonEntity);
 
     @Query("SELECT * FROM PersonEntity WHERE name LIKE :name LIMIT 1")
     PersonEntity findByName(String name);
@@ -27,10 +36,4 @@ public interface PersonDao {
 
     @Update
     void updatePerson(PersonEntity personEntity);
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(PersonEntity personEntity);
-
-    @Delete
-    void delete(PersonEntity PersonEntity);
 }

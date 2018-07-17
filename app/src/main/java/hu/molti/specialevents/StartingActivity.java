@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import hu.molti.specialevents.common.DataLoadedListener;
+import hu.molti.specialevents.service.EventService;
 import hu.molti.specialevents.service.PersonService;
 
 public class StartingActivity extends Activity implements DataLoadedListener {
     private static Context mContext;
+    private int dbsLoadedCnt = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,12 +19,15 @@ public class StartingActivity extends Activity implements DataLoadedListener {
         mContext = getApplicationContext();
 
         setContentView(R.layout.activity_starting);
-        PersonService.getService().startLoadAllPersons(this);
+        PersonService.getService().loadData(this);
+        EventService.getService().loadData(this);
     }
 
     @Override
     public void dataIsLoaded() {
-        startActivity(new Intent(this, EventListActivity.class));
+        if (++dbsLoadedCnt == 2) {
+            startActivity(new Intent(this, EventListActivity.class));
+        }
     }
 
     public static Context getContext() {

@@ -15,11 +15,10 @@ import android.view.View;
 import java.util.ArrayList;
 
 import hu.molti.specialevents.entities.EventEntity;
-import hu.molti.specialevents.entities.PersonEntity;
 import hu.molti.specialevents.common.EventTypeEnum;
 import hu.molti.specialevents.lists.EventListAdapter;
 
-public class EventListActivity extends AppCompatActivity implements EventListAdapter.EventIsDeletedListener {
+public class EventListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +31,7 @@ public class EventListActivity extends AppCompatActivity implements EventListAda
 
     private void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.event_recycler_view);
-
-        ArrayList<PersonEntity> persons = new ArrayList<>();
-        persons.add(new PersonEntity("Test1"));
-        ArrayList<EventEntity> events = new ArrayList<>();
-        events.add(new EventEntity(1, 1, EventTypeEnum.BIRTHDAY, persons));
-        events.add(new EventEntity(2,2,EventTypeEnum.NAMEDAY, persons));
-
-        EventListAdapter adapter = new EventListAdapter(events, this);
+        EventListAdapter adapter = new EventListAdapter();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(adapter);
@@ -78,10 +70,5 @@ public class EventListActivity extends AppCompatActivity implements EventListAda
                 new NewEventDialogFragment().show(getSupportFragmentManager(), "DialogFragment");
             }
         });
-    }
-
-    @Override
-    public void deleteEvent(EventEntity event) {
-
     }
 }
