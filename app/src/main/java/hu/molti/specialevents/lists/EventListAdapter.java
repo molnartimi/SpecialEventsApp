@@ -18,7 +18,6 @@ import hu.molti.specialevents.StartingActivity;
 import hu.molti.specialevents.common.DataModificationListener;
 import hu.molti.specialevents.entities.EventEntity;
 import hu.molti.specialevents.service.EventService;
-import hu.molti.specialevents.service.PersonService;
 
 public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.EventViewHolder>
         implements DataModificationListener {

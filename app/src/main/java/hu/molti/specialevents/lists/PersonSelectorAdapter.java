@@ -8,21 +8,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import hu.molti.specialevents.R;
+import hu.molti.specialevents.common.IPlusMinusPersonLinkSetter;
 import hu.molti.specialevents.common.SpinnerHelper;
 import hu.molti.specialevents.service.PersonService;
 
 public class PersonSelectorAdapter extends RecyclerView.Adapter<PersonSelectorAdapter.SelectorViewHolder> {
     private PersonService personService;
     private ArrayList<String> personIds;
-    private View minusPersonLink;
+    private IPlusMinusPersonLinkSetter listener;
 
-    public PersonSelectorAdapter() {
+    public PersonSelectorAdapter(IPlusMinusPersonLinkSetter listener) {
+        this.listener = listener;
         personService = PersonService.getService();
         personIds = new ArrayList<>();
         _addOne();
@@ -30,10 +31,7 @@ public class PersonSelectorAdapter extends RecyclerView.Adapter<PersonSelectorAd
 
     public void addOne() {
         _addOne();
-        if (personIds.size() == 2) {
-            minusPersonLink.setVisibility(View.VISIBLE);
-        }
-        notifyDataSetChanged();
+        dataSetChanged();
     }
 
     public List<String> getPersonIds() {
@@ -42,14 +40,7 @@ public class PersonSelectorAdapter extends RecyclerView.Adapter<PersonSelectorAd
 
     public void removeOne() {
         personIds.remove(personIds.size() - 1);
-        if (personIds.size() == 1) {
-            minusPersonLink.setVisibility(View.INVISIBLE);
-        }
-        notifyDataSetChanged();
-    }
-
-    public void setMinusPersonLink(TextView minusPersonLink) {
-        this.minusPersonLink = minusPersonLink;
+        dataSetChanged();
     }
 
     public class SelectorViewHolder extends RecyclerView.ViewHolder implements AdapterView.OnItemSelectedListener {
@@ -93,5 +84,10 @@ public class PersonSelectorAdapter extends RecyclerView.Adapter<PersonSelectorAd
 
     private void _addOne() {
         personIds.add(personService.get(0).getId());
+    }
+
+    private void dataSetChanged() {
+        super.notifyDataSetChanged();
+        listener.updatePlusMinusPersonLinks();
     }
 }

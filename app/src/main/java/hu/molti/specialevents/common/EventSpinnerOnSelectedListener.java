@@ -3,24 +3,18 @@ package hu.molti.specialevents.common;
 import android.view.View;
 import android.widget.AdapterView;
 
-import hu.molti.specialevents.lists.PersonSelectorAdapter;
-
 public class EventSpinnerOnSelectedListener implements AdapterView.OnItemSelectedListener {
-    private PersonSelectorAdapter personAdapter;
+    private IPlusMinusPersonLinkSetter listener;
 
-    public EventSpinnerOnSelectedListener(PersonSelectorAdapter adapter) {
-        personAdapter = adapter;
+    public EventSpinnerOnSelectedListener(IPlusMinusPersonLinkSetter listener) {
+        this.listener = listener;
     }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        if (i == 2 && personAdapter.getItemCount() == 1) {
-            personAdapter.addOne();
-        }
+        listener.updatePlusMinusPersonLinks();
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
+    public void onNothingSelected(AdapterView<?> adapterView) {}
 }
