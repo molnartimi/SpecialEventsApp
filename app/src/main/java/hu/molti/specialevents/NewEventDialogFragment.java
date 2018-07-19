@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -18,6 +16,7 @@ import hu.molti.specialevents.common.EventTypeEnum;
 import hu.molti.specialevents.common.EventSpinnerOnSelectedListener;
 import hu.molti.specialevents.common.IPlusMinusPersonLinkSetter;
 import hu.molti.specialevents.common.MonthSpinnerOnSelectedListener;
+import hu.molti.specialevents.common.RecyclerViewHelper;
 import hu.molti.specialevents.common.SpinnerHelper;
 import hu.molti.specialevents.entities.EventEntity;
 import hu.molti.specialevents.lists.PersonSelectorAdapter;
@@ -109,7 +108,10 @@ public class NewEventDialogFragment extends DialogFragment implements IPlusMinus
                 R.id.new_event_dialog_month_spinner, getNumberListTo(12));
         daySpinner = SpinnerHelper.createSpinner(dialogView,
                 R.id.new_event_dialog_day_spinner, getNumberListTo(31));
-        initPersonSelectorRecyclerView();
+
+        personSelectorAdapter = new PersonSelectorAdapter(this);
+        RecyclerViewHelper.initRecyclerView(dialogView.findViewById(R.id.person_selector_recycler_view),
+                personSelectorAdapter);
 
         typeSpinner.setOnItemSelectedListener(new EventSpinnerOnSelectedListener(this));
         monthSpinner.setOnItemSelectedListener(new MonthSpinnerOnSelectedListener(monthSpinner, daySpinner));
@@ -121,14 +123,6 @@ public class NewEventDialogFragment extends DialogFragment implements IPlusMinus
             numbers.add(i);
         }
         return numbers;
-    }
-
-    private void initPersonSelectorRecyclerView() {
-        RecyclerView recyclerView = dialogView.findViewById(R.id.person_selector_recycler_view);
-        personSelectorAdapter = new PersonSelectorAdapter(this);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setAdapter(personSelectorAdapter);
     }
 
     private void showMinusPersonLink(boolean shouldShow) {

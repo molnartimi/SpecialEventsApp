@@ -2,7 +2,6 @@ package hu.molti.specialevents.lists;
 
 import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +10,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
-
 import hu.molti.specialevents.R;
-import hu.molti.specialevents.StartingActivity;
 import hu.molti.specialevents.common.DataModificationListener;
+import hu.molti.specialevents.common.RecyclerViewHelper;
 import hu.molti.specialevents.entities.EventEntity;
 import hu.molti.specialevents.service.EventService;
 
@@ -61,7 +58,9 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
     public void onBindViewHolder(@NonNull EventViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         EventEntity event = eventService.get(position);
         holder.date.setText(event.getDateString());
-        initRecyclerView(holder.personsRecyclerView, event.getPersonIds());
+        RecyclerViewHelper.initRecyclerView(holder.personsRecyclerView,
+                new EventListRowPersonsAdapter(event.getPersonIds()));
+
         int iconId = 0;
         switch (event.getType()) {
             case BIRTHDAY:
@@ -85,12 +84,5 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
     @Override
     public int getItemCount() {
         return eventService.count();
-    }
-
-    private void initRecyclerView(RecyclerView recyclerView, List<String> personIds) {
-        EventListRowPersonsAdapter adapter = new EventListRowPersonsAdapter(personIds);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(StartingActivity.getContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setAdapter(adapter);
     }
 }

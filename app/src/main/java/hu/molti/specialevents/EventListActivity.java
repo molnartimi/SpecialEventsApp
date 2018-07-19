@@ -4,18 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import java.util.ArrayList;
-
-import hu.molti.specialevents.entities.EventEntity;
-import hu.molti.specialevents.common.EventTypeEnum;
+import hu.molti.specialevents.common.RecyclerViewHelper;
 import hu.molti.specialevents.lists.EventListAdapter;
 
 public class EventListActivity extends AppCompatActivity {
@@ -26,15 +21,7 @@ public class EventListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_list);
         createToolbar();
         createFloatingActionBtn();
-        initRecyclerView();
-    }
-
-    private void initRecyclerView() {
-        RecyclerView recyclerView = findViewById(R.id.event_recycler_view);
-        EventListAdapter adapter = new EventListAdapter();
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setAdapter(adapter);
+        RecyclerViewHelper.initRecyclerView(findViewById(R.id.event_recycler_view), new EventListAdapter());
     }
 
     @Override
