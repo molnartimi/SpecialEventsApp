@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import hu.molti.specialevents.common.EventTypeEnum;
+import hu.molti.specialevents.common.EventType;
 import hu.molti.specialevents.common.EventSpinnerOnSelectedListener;
 import hu.molti.specialevents.common.IPlusMinusPersonLinkSetter;
 import hu.molti.specialevents.common.MonthSpinnerOnSelectedListener;
@@ -53,9 +53,9 @@ public class NewEventDialogFragment extends DialogFragment implements IPlusMinus
 
     @Override
     public void updatePlusMinusPersonLinks() {
-        EventTypeEnum type = EventTypeEnum.toEventType(typeSpinner.getSelectedItemPosition());
+        EventType type = EventType.toEventType(typeSpinner.getSelectedItemPosition());
         int personCount = personSelectorAdapter.getItemCount();
-        if (type == EventTypeEnum.ANNIVERSARY) {
+        if (type == EventType.ANNIVERSARY) {
             if (personCount == 1) {
                 personSelectorAdapter.addOne();
             } else {
@@ -74,7 +74,7 @@ public class NewEventDialogFragment extends DialogFragment implements IPlusMinus
         return new EventEntity(
                 monthSpinner.getSelectedItemPosition() + 1,
                 daySpinner.getSelectedItemPosition() + 1,
-                EventTypeEnum.toEventType(typeSpinner.getSelectedItemPosition()),
+                EventType.toEventType(typeSpinner.getSelectedItemPosition()),
                 personSelectorAdapter.getPersonIds());
     }
 
@@ -103,7 +103,7 @@ public class NewEventDialogFragment extends DialogFragment implements IPlusMinus
 
     private void initSpinners() {
         typeSpinner = SpinnerHelper.createSpinner(dialogView,
-                R.id.new_event_dialog_type_spinner, EventTypeEnum.stringList());
+                R.id.new_event_dialog_type_spinner, EventType.stringList());
         monthSpinner = SpinnerHelper.createSpinner(dialogView,
                 R.id.new_event_dialog_month_spinner, getNumberListTo(12));
         daySpinner = SpinnerHelper.createSpinner(dialogView,

@@ -20,7 +20,7 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.Pe
 
     public PersonListAdapter() {
         service = PersonService.getService();
-        service.setDataModificationListener(this);
+        service.setDataModificationListener(this, 0);
     }
 
     public class PersonViewHolder extends RecyclerView.ViewHolder {
@@ -45,12 +45,13 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.Pe
 
     @Override
     public void onBindViewHolder(@NonNull PersonViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-        String name = service.get(position).getName();
+        final PersonEntity person = service.get(position);
+        String name = person.getName();
         holder.name.setText(name);
         holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                service.remove(position);
+                service.remove(person);
             }
         });
     }

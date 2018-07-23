@@ -21,4 +21,17 @@ public class PersonService extends BaseService<PersonDao, PersonEntity> {
         }
         return service;
     }
+
+    @Override
+    protected void entityAdded(PersonEntity person) {
+        for (int i = 0; i < dataList.size(); i++) {
+            if (dataList.get(i).getName().compareTo(person.getName()) > 0) {
+                dataList.add(i, person);
+                emitListener(0);
+                return;
+            }
+        }
+        dataList.add(person);
+        emitListener(0);
+    }
 }

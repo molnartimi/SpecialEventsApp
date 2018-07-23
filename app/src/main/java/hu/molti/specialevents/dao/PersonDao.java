@@ -14,7 +14,7 @@ import hu.molti.specialevents.entities.PersonEntity;
 @Dao
 public interface PersonDao extends IDao<PersonEntity> {
     @Override
-    @Query("SELECT * FROM PersonEntity")
+    @Query("SELECT * FROM PersonEntity ORDER BY name")
     List<PersonEntity> getAll();
 
     @Override

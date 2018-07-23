@@ -20,4 +20,16 @@
     <string name="anniversary">Évforduló</string>
     <string name="add_plus_person"><u>Új személy hozzáadása</u></string>
     <string name="remove_plus_person"><u>Személy eltávolítása</u></string>
+    <string name="jan">Január</string>
+    <string name="febr">Február</string>
+    <string name="marc">Március</string>
+    <string name="apr">Április</string>
+    <string name="mai">Május</string>
+    <string name="jun">Június</string>
+    <string name="jul">Július</string>
+    <string name="aug">Augusztus</string>
+    <string name="sept">Szeptember</string>
+    <string name="oct">Október</string>
+    <string name="nov">November</string>
+    <string name="dec">December</string>
 </resources>

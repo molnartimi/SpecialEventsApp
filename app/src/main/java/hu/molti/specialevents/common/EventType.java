@@ -9,7 +9,7 @@ import java.util.List;
 import hu.molti.specialevents.R;
 import hu.molti.specialevents.StartingActivity;
 
-public enum EventTypeEnum {
+public enum EventType {
     BIRTHDAY, NAMEDAY, ANNIVERSARY;
 
     private static Resources resources = StartingActivity.getContext().getResources();
@@ -27,20 +27,20 @@ public enum EventTypeEnum {
 
     public static List<String> stringList() {
         List<String> strings = new ArrayList<>();
-        for (EventTypeEnum type: values()) {
+        for (EventType type: values()) {
             strings.add(type.toString());
         }
         return strings;
     }
 
     @TypeConverter
-    public static EventTypeEnum toEventType(int code) {
+    public static EventType toEventType(int code) {
         return values()[code];
     }
 
     @TypeConverter
-    public static int toInt(EventTypeEnum obj) {
-        EventTypeEnum[] values = values();
+    public static int toInt(EventType obj) {
+        EventType[] values = values();
         for (int i = 0; i < values.length; i++) {
             if (obj.equals(values[i])) {
                 return i;

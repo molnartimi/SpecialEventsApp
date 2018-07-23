@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import hu.molti.specialevents.common.RecyclerViewHelper;
-import hu.molti.specialevents.lists.EventListAdapter;
+import hu.molti.specialevents.lists.MonthListAdapter;
 
 public class EventListActivity extends AppCompatActivity {
 
@@ -21,7 +21,7 @@ public class EventListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_list);
         createToolbar();
         createFloatingActionBtn();
-        RecyclerViewHelper.initRecyclerView(findViewById(R.id.event_recycler_view), new EventListAdapter());
+        RecyclerViewHelper.initRecyclerView(findViewById(R.id.month_recycler_view), new MonthListAdapter());
     }
 
     @Override

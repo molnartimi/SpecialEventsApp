@@ -13,7 +13,7 @@ import hu.molti.specialevents.entities.EventEntity;
 @Dao
 public interface EventDao extends IDao<EventEntity> {
     @Override
-    @Query("SELECT * FROM EventEntity")
+    @Query("SELECT * FROM EventEntity ORDER BY month, day")
     List<EventEntity> getAll();
 
     @Override

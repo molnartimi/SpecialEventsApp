@@ -8,7 +8,7 @@ import android.support.annotation.NonNull;
 import java.util.List;
 import java.util.UUID;
 
-import hu.molti.specialevents.common.EventTypeEnum;
+import hu.molti.specialevents.common.EventType;
 import hu.molti.specialevents.common.MyTypeConverter;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,13 +23,13 @@ public class EventEntity implements IEntity<EventEntity> {
     private int month;
     private int day;
 
-    @TypeConverters(EventTypeEnum.class)
-    private EventTypeEnum type;
+    @TypeConverters(EventType.class)
+    private EventType type;
 
     @TypeConverters(MyTypeConverter.class)
     private List<String> personIds;
 
-    public EventEntity(int month, int day, EventTypeEnum type, List<String> personIds) {
+    public EventEntity(int month, int day, EventType type, List<String> personIds) {
         this.month = month;
         this.day = day;
         this.type = type;

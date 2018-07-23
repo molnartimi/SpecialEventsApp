@@ -19,15 +19,17 @@ import hu.molti.specialevents.service.EventService;
 public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.EventViewHolder>
         implements DataModificationListener {
     private EventService eventService;
+    private int monthIdx;
 
     @Override
     public void changed() {
         notifyDataSetChanged();
     }
 
-    public EventListAdapter() {
+    public EventListAdapter(int monthIdx) {
+        this.monthIdx = monthIdx;
         eventService = EventService.getService();
-        eventService.setDataModificationListener(this);
+        eventService.setDataModificationListener(this, monthIdx);
     }
 
     public class EventViewHolder extends RecyclerView.ViewHolder {
@@ -56,8 +58,8 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
 
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-        EventEntity event = eventService.get(position);
-        holder.date.setText(event.getDateString());
+        final EventEntity event = eventService.getInMonth(monthIdx, position);
+        holder.date.setText(event.getDay() + ".");
         RecyclerViewHelper.initRecyclerView(holder.personsRecyclerView,
                 new EventListRowPersonsAdapter(event.getPersonIds()));
 
@@ -76,13 +78,13 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                eventService.remove(position);
+                eventService.remove(event);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return eventService.count();
+        return eventService.getCountInMonth(monthIdx);
     }
 }
