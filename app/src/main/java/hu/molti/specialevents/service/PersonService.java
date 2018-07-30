@@ -9,10 +9,12 @@ import hu.molti.specialevents.entities.PersonEntity;
 
 public class PersonService extends BaseService<PersonDao, PersonEntity> {
     private static PersonService service;
+    private EventService eventService;
 
     private PersonService() {
         db = Room.databaseBuilder(StartingActivity.getContext(),
                 PersonDatabase.class, "person-db").build().PersonDao();
+        eventService = EventService.getService();
     }
 
     public static PersonService getService() {
@@ -33,5 +35,13 @@ public class PersonService extends BaseService<PersonDao, PersonEntity> {
         }
         dataList.add(person);
         emitListener(0);
+    }
+
+    @Override
+    protected void entityRemoved(PersonEntity entity) {
+        dataList.remove(entity);
+        emitListener(0);
+        eventService.removePersonFromEvents(entity.getId());
+
     }
 }

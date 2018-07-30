@@ -74,6 +74,16 @@ public abstract class BaseService<Dao extends IDao<Entity>, Entity extends IEnti
         }.execute();
     }
 
+    protected void update(final Entity entity) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                db.update(entity);
+                return null;
+            }
+        }.execute();
+    }
+
     protected void emitListener(int id) {
         dataModificationListeners.get(id).changed();
     }

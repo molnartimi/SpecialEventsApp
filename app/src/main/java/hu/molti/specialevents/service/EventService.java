@@ -1,6 +1,7 @@
 package hu.molti.specialevents.service;
 
 import android.arch.persistence.room.Room;
+import android.os.AsyncTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,5 +71,25 @@ public class EventService extends BaseService<EventDao, EventEntity> {
         int monthIdx = entity.getMonth() - 1;
         eventsInMonths.get(monthIdx).remove(entity);
         emitListener(monthIdx);
+    }
+
+    public void removePersonFromEvents(final String personId) {
+        // TODO loading, lassú lehet...
+        ArrayList<EventEntity> toRemove = new ArrayList<>();
+        for (EventEntity event : dataList) {
+            int personIdx = event.getPersonIdx(personId);
+            if (personIdx >= 0) {
+                if (event.getPersonIds().size() == 1) {
+                    toRemove.add(event);
+                } else {
+                    event.getPersonIds().remove(personIdx);
+                    update(event);
+                }
+            }
+        }
+
+        for (EventEntity event : toRemove) {
+            remove(event);
+        }
     }
 }

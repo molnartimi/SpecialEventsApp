@@ -25,6 +25,10 @@ public interface PersonDao extends IDao<PersonEntity> {
     @Delete
     void delete(PersonEntity PersonEntity);
 
+    @Override
+    @Update
+    void update(PersonEntity personEntity);
+
     @Query("SELECT * FROM PersonEntity WHERE name LIKE :name LIMIT 1")
     PersonEntity findByName(String name);
 
@@ -33,7 +37,4 @@ public interface PersonDao extends IDao<PersonEntity> {
 
     @Query("SELECT * FROM PersonEntity WHERE name LIKE :name")
     List<PersonEntity> findALLByName(String name);
-
-    @Update
-    void updatePerson(PersonEntity personEntity);
 }
