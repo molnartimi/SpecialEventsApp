@@ -3,15 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:padding="5dp"
+    android:layout_marginBottom="5dp"
     android:weightSum="1"
-    android:background="@color/colorAccent">
+    android:background="@drawable/person_rectangular">
 
     <TextView
         android:id="@+id/event_list_row_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.2"
+        android:layout_weight="0.15"
+        android:layout_gravity="center"
         android:textSize="20sp"/>
 
     <android.support.v7.widget.RecyclerView
@@ -19,13 +20,15 @@
         android:scrollbars="vertical"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.4"/>
+        android:layout_weight="0.45"
+        android:layout_gravity="center"/>
 
     <ImageView
         android:id="@+id/event_list_row_icon"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="40dp"
         android:layout_weight="0.2"
+        android:layout_gravity="center"
         android:contentDescription="@string/event_type_description" />
 
     <LinearLayout
@@ -33,15 +36,17 @@
         android:layout_weight="0.2"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:gravity="end">
+        android:gravity="end"
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/delete_event_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:padding="10dp"
+            android:layout_gravity="center"
             app:srcCompat="@drawable/ic_clear_black_24dp"
-            android:contentDescription="@string/delete_text" />
+            android:contentDescription="@string/delete" />
     </LinearLayout>
 
 
