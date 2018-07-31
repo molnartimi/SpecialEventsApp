@@ -3,16 +3,22 @@ package hu.molti.specialevents.common;
 import android.view.View;
 import android.widget.AdapterView;
 
-public class EventSpinnerOnSelectedListener implements AdapterView.OnItemSelectedListener {
-    private IPlusMinusPersonLinkSetter listener;
+import hu.molti.specialevents.lists.PersonSelectorAdapter;
 
-    public EventSpinnerOnSelectedListener(IPlusMinusPersonLinkSetter listener) {
-        this.listener = listener;
+public class EventSpinnerOnSelectedListener implements AdapterView.OnItemSelectedListener {
+    private PersonSelectorAdapter adapter;
+
+    public EventSpinnerOnSelectedListener(PersonSelectorAdapter adapter) {
+        this.adapter = adapter;
     }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        listener.updatePlusMinusPersonLinks();
+        EventType type = EventType.toEventType(i);
+        int personCount = adapter.getItemCount();
+        if (type == EventType.ANNIVERSARY && personCount == 1) {
+                adapter.addOne();
+        }
     }
 
     @Override

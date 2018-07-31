@@ -7,14 +7,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import hu.molti.specialevents.common.EventType;
 import hu.molti.specialevents.common.EventSpinnerOnSelectedListener;
-import hu.molti.specialevents.common.IPlusMinusPersonLinkSetter;
 import hu.molti.specialevents.common.MonthSpinnerOnSelectedListener;
 import hu.molti.specialevents.common.RecyclerViewHelper;
 import hu.molti.specialevents.common.SpinnerHelper;
@@ -22,11 +21,10 @@ import hu.molti.specialevents.entities.EventEntity;
 import hu.molti.specialevents.lists.PersonSelectorAdapter;
 import hu.molti.specialevents.service.EventService;
 
-public class NewEventDialogFragment extends DialogFragment implements IPlusMinusPersonLinkSetter {
+public class NewEventDialogFragment extends DialogFragment {
     private View dialogView;
     private Spinner typeSpinner, monthSpinner, daySpinner;
     private PersonSelectorAdapter personSelectorAdapter;
-    private TextView plusPersonLink, minusPersonLink;
 
     @NonNull
     @Override
@@ -51,25 +49,6 @@ public class NewEventDialogFragment extends DialogFragment implements IPlusMinus
         return builder.create();
     }
 
-    @Override
-    public void updatePlusMinusPersonLinks() {
-        EventType type = EventType.toEventType(typeSpinner.getSelectedItemPosition());
-        int personCount = personSelectorAdapter.getItemCount();
-        if (type == EventType.ANNIVERSARY) {
-            if (personCount == 1) {
-                personSelectorAdapter.addOne();
-            } else {
-                showMinusPersonLink(personCount > 2);
-            }
-        } else {
-            if (personCount == 1) {
-                showMinusPersonLink(false);
-            } else {
-                showMinusPersonLink(true);
-            }
-        }
-    }
-
     private EventEntity createNewEvent() {
         return new EventEntity(
                 monthSpinner.getSelectedItemPosition() + 1,
@@ -80,23 +59,28 @@ public class NewEventDialogFragment extends DialogFragment implements IPlusMinus
 
     private void initView() {
         initSpinners();
-        initPlusMinusPersonLinks();
+        initPlusMinusPersonButtons();
     }
 
-    private void initPlusMinusPersonLinks() {
-        plusPersonLink = dialogView.findViewById(R.id.new_event_dialog_plus_person_btn);
-        minusPersonLink = dialogView.findViewById(R.id.new_event_dialog_minus_person_btn);
+    private void initPlusMinusPersonButtons() {
+        ImageView plusPersonBtn = dialogView.findViewById(R.id.new_event_dialog_plus_person_btn);
+        ImageView minusPersonBtn = dialogView.findViewById(R.id.new_event_dialog_minus_person_btn);
 
-        plusPersonLink.setOnClickListener(new View.OnClickListener() {
+        plusPersonBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 personSelectorAdapter.addOne();
             }
         });
-        minusPersonLink.setOnClickListener(new View.OnClickListener() {
+        minusPersonBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                personSelectorAdapter.removeOne();
+                EventType type = EventType.toEventType(typeSpinner.getSelectedItemPosition());
+                int personsCount = personSelectorAdapter.getItemCount();
+                if ((type == EventType.ANNIVERSARY && personsCount > 2) ||
+                    (type != EventType.ANNIVERSARY && personsCount > 1)) {
+                    personSelectorAdapter.removeOne();
+                }
             }
         });
     }
@@ -109,11 +93,11 @@ public class NewEventDialogFragment extends DialogFragment implements IPlusMinus
         daySpinner = SpinnerHelper.createSpinner(dialogView,
                 R.id.new_event_dialog_day_spinner, getNumberListTo(31));
 
-        personSelectorAdapter = new PersonSelectorAdapter(this);
+        personSelectorAdapter = new PersonSelectorAdapter();
         RecyclerViewHelper.initRecyclerView(dialogView.findViewById(R.id.person_selector_recycler_view),
                 personSelectorAdapter);
 
-        typeSpinner.setOnItemSelectedListener(new EventSpinnerOnSelectedListener(this));
+        typeSpinner.setOnItemSelectedListener(new EventSpinnerOnSelectedListener(personSelectorAdapter));
         monthSpinner.setOnItemSelectedListener(new MonthSpinnerOnSelectedListener(monthSpinner, daySpinner));
     }
 
@@ -123,9 +107,5 @@ public class NewEventDialogFragment extends DialogFragment implements IPlusMinus
             numbers.add(i);
         }
         return numbers;
-    }
-
-    private void showMinusPersonLink(boolean shouldShow) {
-        minusPersonLink.setVisibility(shouldShow ? View.VISIBLE : View.INVISIBLE);
     }
 }

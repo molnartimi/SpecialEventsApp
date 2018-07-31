@@ -13,17 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import hu.molti.specialevents.R;
-import hu.molti.specialevents.common.IPlusMinusPersonLinkSetter;
 import hu.molti.specialevents.common.SpinnerHelper;
 import hu.molti.specialevents.service.PersonService;
 
 public class PersonSelectorAdapter extends RecyclerView.Adapter<PersonSelectorAdapter.SelectorViewHolder> {
     private PersonService personService;
     private ArrayList<String> personIds;
-    private IPlusMinusPersonLinkSetter listener;
 
-    public PersonSelectorAdapter(IPlusMinusPersonLinkSetter listener) {
-        this.listener = listener;
+    public PersonSelectorAdapter() {
         personService = PersonService.getService();
         personIds = new ArrayList<>();
         _addOne();
@@ -88,6 +85,5 @@ public class PersonSelectorAdapter extends RecyclerView.Adapter<PersonSelectorAd
 
     private void dataSetChanged() {
         super.notifyDataSetChanged();
-        listener.updatePlusMinusPersonLinks();
     }
 }

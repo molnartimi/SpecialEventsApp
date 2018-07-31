@@ -1,20 +1,57 @@
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
+    android:layout_width="wrap_content">
+<LinearLayout
+    android:layout_height="wrap_content"
     android:layout_width="wrap_content"
     android:orientation="vertical"
-    android:gravity="center">
+    android:padding="10dp"
+    android:isScrollContainer="true">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/person_selector_recycler_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical" />
+
+        <ImageView
+            android:id="@+id/new_event_dialog_plus_person_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="top"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            app:srcCompat="@drawable/ic_add_circle_green_light_24dp"
+            android:contentDescription="@string/add_plus_person" />
+
+        <ImageView
+            android:id="@+id/new_event_dialog_minus_person_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="top"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            app:srcCompat="@drawable/ic_remove_circle_red_24dp"
+            android:contentDescription="@string/remove_plus_person" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:layout_width="match_parent">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="18sp"
             android:text="@string/event_type_label"/>
         <Spinner
             android:id="@+id/new_event_dialog_type_spinner"
@@ -23,14 +60,13 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="18sp"
             android:text="@string/month_label"/>
         <Spinner
             android:id="@+id/new_event_dialog_month_spinner"
@@ -40,6 +76,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="18sp"
             android:text="@string/day_label"/>
         <Spinner
             android:id="@+id/new_event_dialog_day_spinner"
@@ -47,35 +84,5 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/person_selector_recycler_view"
-        android:scrollbars="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView
-        android:id="@+id/new_event_dialog_plus_person_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/add_plus_person"
-        android:textColor="@android:color/holo_green_light"
-        android:drawableLeft="@drawable/ic_add_circle_green_light_24dp"
-        android:drawableStart="@drawable/ic_add_circle_green_light_24dp"
-        android:drawablePadding="5dp"
-        android:paddingLeft="15dp"
-        android:paddingStart="15dp"/>
-
-    <TextView
-        android:id="@+id/new_event_dialog_minus_person_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/remove_plus_person"
-        android:textColor="#CC2A30"
-        android:drawableLeft="@drawable/ic_remove_circle_red_24dp"
-        android:drawableStart="@drawable/ic_remove_circle_red_24dp"
-        android:drawablePadding="5dp"
-        android:paddingLeft="15dp"
-        android:paddingStart="15dp"
-        android:visibility="invisible"/>
-
 </LinearLayout>
+</ScrollView>
