@@ -33,4 +33,7 @@
     <string name="nov">November</string>
     <string name="dec">December</string>
     <string name="edit">Módosítás</string>
+    <string name="ok">Igen</string>
+    <string name="confirm_delete_event_message">Biztosan törli az eseményt?</string>
+    <string name="confirm_delete_person_message">Biztosan törli a személyt?</string>
 </resources>

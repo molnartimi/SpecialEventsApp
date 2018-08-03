@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import hu.molti.specialevents.R;
 import hu.molti.specialevents.StartingActivity;
-import hu.molti.specialevents.common.EditBtnOnClickListener;
+import hu.molti.specialevents.common.EditEntityListener;
 import hu.molti.specialevents.common.RecyclerViewHelper;
 import hu.molti.specialevents.entities.EventEntity;
 
@@ -19,9 +19,9 @@ public class MonthListAdapter extends RecyclerView.Adapter<MonthListAdapter.Mont
                                   R.string.apr, R.string.mai, R.string.jun,
                                   R.string.jul, R.string.aug, R.string.sept,
                                   R.string.oct, R.string.nov, R.string.dec};
-    private EditBtnOnClickListener<EventEntity> mListener;
+    private EditEntityListener<EventEntity> mListener;
 
-    public MonthListAdapter(EditBtnOnClickListener<EventEntity> listener) {
+    public MonthListAdapter(EditEntityListener<EventEntity> listener) {
         this.mListener = listener;
     }
 

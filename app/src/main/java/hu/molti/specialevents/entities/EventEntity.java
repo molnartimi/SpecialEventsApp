@@ -34,7 +34,7 @@ public class EventEntity implements IEntity<EventEntity> {
         this.month = month;
         this.day = day;
         this.type = type;
-        this.personIds = personIds;
+        this.personIds = new ArrayList<>(personIds);
         this.id = UUID.randomUUID().toString();
     }
 

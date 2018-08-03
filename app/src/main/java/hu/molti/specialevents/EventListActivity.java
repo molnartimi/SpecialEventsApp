@@ -1,5 +1,6 @@
 package hu.molti.specialevents;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,12 +12,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import hu.molti.specialevents.common.EditBtnOnClickListener;
+import hu.molti.specialevents.common.EditEntityListener;
 import hu.molti.specialevents.common.RecyclerViewHelper;
 import hu.molti.specialevents.entities.EventEntity;
 import hu.molti.specialevents.lists.MonthListAdapter;
+import hu.molti.specialevents.service.EventService;
 
-public class EventListActivity extends AppCompatActivity implements EditBtnOnClickListener<EventEntity> {
+public class EventListActivity extends AppCompatActivity implements EditEntityListener<EventEntity> {
+    private EventService eventService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +28,7 @@ public class EventListActivity extends AppCompatActivity implements EditBtnOnCli
         createToolbar();
         createFloatingActionBtn();
         RecyclerViewHelper.initRecyclerView(findViewById(R.id.month_recycler_view), new MonthListAdapter(EventListActivity.this));
+        eventService = EventService.getService();
     }
 
     @Override
@@ -69,5 +73,18 @@ public class EventListActivity extends AppCompatActivity implements EditBtnOnCli
         bundle.putString("id", event.getId());
         newEventDialog.setArguments(bundle);
         newEventDialog.show(getSupportFragmentManager(), "DialogFragment");
+    }
+
+    @Override
+    public void onDeleteBtnOnClicked(final EventEntity personEntity) {
+        ConfirmDialogFragment dialog = new ConfirmDialogFragment();
+        dialog.setMessage(getString(R.string.confirm_delete_event_message));
+        dialog.setOnOkListener(new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                eventService.remove(personEntity);
+            }
+        });
+        dialog.show(getSupportFragmentManager(), "DialogFragment");
     }
 }

@@ -1,5 +1,6 @@
 package hu.molti.specialevents;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,12 +11,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import hu.molti.specialevents.common.EditBtnOnClickListener;
+import hu.molti.specialevents.common.EditEntityListener;
 import hu.molti.specialevents.common.RecyclerViewHelper;
 import hu.molti.specialevents.entities.PersonEntity;
 import hu.molti.specialevents.lists.PersonListAdapter;
+import hu.molti.specialevents.service.PersonService;
 
-public class PersonListActivity extends AppCompatActivity implements EditBtnOnClickListener<PersonEntity> {
+public class PersonListActivity extends AppCompatActivity implements EditEntityListener<PersonEntity> {
+    private PersonService personService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +27,7 @@ public class PersonListActivity extends AppCompatActivity implements EditBtnOnCl
         createToolbar();
         createFloatingActionBtn();
         RecyclerViewHelper.initRecyclerView(findViewById(R.id.person_recycler_view), new PersonListAdapter(PersonListActivity.this));
+        personService = PersonService.getService();
     }
 
     @Override
@@ -67,6 +71,19 @@ public class PersonListActivity extends AppCompatActivity implements EditBtnOnCl
         Bundle bundle = new Bundle();
         bundle.putString("id", personEntity.getId());
         dialog.setArguments(bundle);
+        dialog.show(getSupportFragmentManager(), "DialogFragment");
+    }
+
+    @Override
+    public void onDeleteBtnOnClicked(final PersonEntity personEntity) {
+        ConfirmDialogFragment dialog = new ConfirmDialogFragment();
+        dialog.setMessage(getString(R.string.confirm_delete_person_message));
+        dialog.setOnOkListener(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        personService.remove(personEntity);
+                    }
+                });
         dialog.show(getSupportFragmentManager(), "DialogFragment");
     }
 }

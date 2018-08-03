@@ -6,22 +6,21 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import hu.molti.specialevents.R;
 import hu.molti.specialevents.common.DataModificationListener;
-import hu.molti.specialevents.common.EditBtnOnClickListener;
+import hu.molti.specialevents.common.EditEntityListener;
 import hu.molti.specialevents.entities.PersonEntity;
 import hu.molti.specialevents.service.PersonService;
 
 public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.PersonViewHolder>
         implements DataModificationListener {
     private PersonService service;
-    private EditBtnOnClickListener<PersonEntity> mListener;
+    private EditEntityListener<PersonEntity> mListener;
 
-    public PersonListAdapter(EditBtnOnClickListener<PersonEntity> listener) {
+    public PersonListAdapter(EditEntityListener<PersonEntity> listener) {
         service = PersonService.getService();
         service.setDataModificationListener(this, 0);
         mListener = listener;
@@ -62,7 +61,7 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.Pe
         holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                service.remove(person);
+                mListener.onDeleteBtnOnClicked(person);
             }
         });
     }
