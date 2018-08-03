@@ -74,7 +74,8 @@ public abstract class BaseService<Dao extends IDao<Entity>, Entity extends IEnti
         }.execute();
     }
 
-    protected void update(final Entity entity) {
+    public void update(final Entity entity) {
+        entityUpdated(entity);
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -88,6 +89,12 @@ public abstract class BaseService<Dao extends IDao<Entity>, Entity extends IEnti
         dataModificationListeners.get(id).changed();
     }
 
+    protected void emitAllListeners() {
+        for (DataModificationListener listener: dataModificationListeners.values()) {
+            listener.changed();
+        }
+    }
+
     protected void afterDataLoaded() {}
 
     protected void entityAdded(Entity entity) {
@@ -97,6 +104,10 @@ public abstract class BaseService<Dao extends IDao<Entity>, Entity extends IEnti
 
     protected void entityRemoved(Entity entity) {
         dataList.remove(entity);
+        emitListener(0);
+    }
+
+    protected void entityUpdated(Entity entity) {
         emitListener(0);
     }
 

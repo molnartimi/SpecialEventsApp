@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import hu.molti.specialevents.common.EventType;
 import hu.molti.specialevents.common.EventSpinnerOnSelectedListener;
@@ -25,6 +26,17 @@ public class NewEventDialogFragment extends DialogFragment {
     private View dialogView;
     private Spinner typeSpinner, monthSpinner, daySpinner;
     private PersonSelectorAdapter personSelectorAdapter;
+    private EventEntity event;
+    private EventService eventService;
+
+    public NewEventDialogFragment() {
+        eventService = EventService.getService();
+    }
+
+    @Override
+    public void setArguments(Bundle bundle) {
+        event = eventService.get(bundle.getString("id"));
+    }
 
     @NonNull
     @Override
@@ -36,10 +48,15 @@ public class NewEventDialogFragment extends DialogFragment {
         initView();
 
         builder.setView(dialogView)
-                .setTitle(R.string.save_event_dialog_title)
+                .setTitle((event == null) ? R.string.save_event_dialog_title : R.string.edit_event_dialog_title)
                 .setPositiveButton(R.string.save_something, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        EventService.getService().add(createNewEvent());
+                        if (event == null) {
+                            eventService.add(getEvent());
+                        } else {
+                            eventService.update(getEvent());
+                        }
+
                     }
                 })
                 .setNegativeButton(R.string.cancel_something, new DialogInterface.OnClickListener() {
@@ -49,12 +66,22 @@ public class NewEventDialogFragment extends DialogFragment {
         return builder.create();
     }
 
-    private EventEntity createNewEvent() {
-        return new EventEntity(
-                monthSpinner.getSelectedItemPosition() + 1,
-                daySpinner.getSelectedItemPosition() + 1,
-                EventType.toEventType(typeSpinner.getSelectedItemPosition()),
-                personSelectorAdapter.getPersonIds());
+    private EventEntity getEvent() {
+        int month = monthSpinner.getSelectedItemPosition() + 1;
+        int day = daySpinner.getSelectedItemPosition() + 1;
+        EventType type = EventType.toEventType(typeSpinner.getSelectedItemPosition());
+        List<String> personIds = personSelectorAdapter.getPersonIds();
+
+        if (event == null) {
+            event = new EventEntity(month, day, type, personIds);
+        } else {
+            event.setMonth(month);
+            event.setDay(day);
+            event.setType(type);
+            event.setPersonIds(personIds);
+        }
+
+        return event;
     }
 
     private void initView() {
@@ -99,6 +126,13 @@ public class NewEventDialogFragment extends DialogFragment {
 
         typeSpinner.setOnItemSelectedListener(new EventSpinnerOnSelectedListener(personSelectorAdapter));
         monthSpinner.setOnItemSelectedListener(new MonthSpinnerOnSelectedListener(monthSpinner, daySpinner));
+
+        if (event != null) {
+            typeSpinner.setSelection(EventType.toInt(event.getType()));
+            monthSpinner.setSelection(event.getMonth() - 1);
+            daySpinner.setSelection(event.getDay() - 1);
+            personSelectorAdapter.setPersons(event.getPersonIds());
+        }
     }
 
     private ArrayList<Integer> getNumberListTo(int max) {

@@ -18,7 +18,7 @@ import hu.molti.specialevents.service.PersonService;
 
 public class PersonSelectorAdapter extends RecyclerView.Adapter<PersonSelectorAdapter.SelectorViewHolder> {
     private PersonService personService;
-    private ArrayList<String> personIds;
+    private List<String> personIds;
 
     public PersonSelectorAdapter() {
         personService = PersonService.getService();
@@ -37,6 +37,11 @@ public class PersonSelectorAdapter extends RecyclerView.Adapter<PersonSelectorAd
 
     public void removeOne() {
         personIds.remove(personIds.size() - 1);
+        dataSetChanged();
+    }
+
+    public void setPersons(List<String> personIds) {
+        this.personIds = new ArrayList<>(personIds);
         dataSetChanged();
     }
 
@@ -72,6 +77,7 @@ public class PersonSelectorAdapter extends RecyclerView.Adapter<PersonSelectorAd
     @Override
     public void onBindViewHolder(@NonNull SelectorViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         holder.idx = position;
+        holder.spinner.setSelection(personService.getIdx(personIds.get(position)));
     }
 
     @Override

@@ -17,6 +17,11 @@ public class MonthListAdapter extends RecyclerView.Adapter<MonthListAdapter.Mont
                                   R.string.apr, R.string.mai, R.string.jun,
                                   R.string.jul, R.string.aug, R.string.sept,
                                   R.string.oct, R.string.nov, R.string.dec};
+    private EventListAdapter.EditEventBtnOnCliskListener mListener;
+
+    public MonthListAdapter(EventListAdapter.EditEventBtnOnCliskListener listener) {
+        this.mListener = listener;
+    }
 
     public class MonthViewHolder extends RecyclerView.ViewHolder {
         public TextView month;
@@ -41,7 +46,7 @@ public class MonthListAdapter extends RecyclerView.Adapter<MonthListAdapter.Mont
     @Override
     public void onBindViewHolder(@NonNull MonthViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         holder.month.setText(StartingActivity.getContext().getResources().getString(monthNameIds[position]));
-        RecyclerViewHelper.initRecyclerView(holder.eventsRecyclerView, new EventListAdapter(position));
+        RecyclerViewHelper.initRecyclerView(holder.eventsRecyclerView, new EventListAdapter(position, mListener));
     }
 
     @Override

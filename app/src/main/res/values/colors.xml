@@ -5,6 +5,7 @@
     <color name="colorPrimaryLight">#df4198</color>
     <color name="colorAccent">#2728ff</color>
     <color name="colorOrange">#ff8b24</color>
+    <color name="colorOrangeDark">#ff7f00</color>
     <color name="colorBlue">#289eff</color>
     <color name="colorGreen">#72ff01</color>
     <color name="colorRed">#ff2424</color>

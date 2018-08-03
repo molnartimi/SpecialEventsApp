@@ -44,4 +44,13 @@ public class PersonService extends BaseService<PersonDao, PersonEntity> {
         eventService.removePersonFromEvents(entity.getId());
 
     }
+
+    public int getIdx(String id) {
+        for (PersonEntity person: dataList) {
+            if (person.getId().equals(id)) {
+                return dataList.indexOf(person);
+            }
+        }
+        return -1;
+    }
 }

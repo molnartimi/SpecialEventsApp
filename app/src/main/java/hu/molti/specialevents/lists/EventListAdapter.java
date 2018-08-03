@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,30 +19,37 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         implements DataModificationListener {
     private EventService eventService;
     private int monthIdx;
+    private EditEventBtnOnCliskListener mListener;
+
+    public interface EditEventBtnOnCliskListener {
+        void onEditEventOnClicked(EventEntity event);
+    }
 
     @Override
     public void changed() {
         notifyDataSetChanged();
     }
 
-    public EventListAdapter(int monthIdx) {
+    public EventListAdapter(int monthIdx, EditEventBtnOnCliskListener listener) {
         this.monthIdx = monthIdx;
         eventService = EventService.getService();
         eventService.setDataModificationListener(this, monthIdx);
+        mListener = listener;
     }
 
     public class EventViewHolder extends RecyclerView.ViewHolder {
         public TextView date;
         public RecyclerView personsRecyclerView;
         public ImageView icon;
-        ImageButton deleteBtn;
+        public ImageView editBtn, deleteBtn;
 
         EventViewHolder(View view) {
             super(view);
             date = view.findViewById(R.id.event_list_row_date);
             personsRecyclerView = view.findViewById(R.id.event_list_row_persons_recycler_view);
             icon = view.findViewById(R.id.event_list_row_icon);
-            deleteBtn = view.findViewById(R.id.delete_event_btn);
+            editBtn = view.findViewById(R.id.event_list_row_edit_btn);
+            deleteBtn = view.findViewById(R.id.event_list_row_delete_btn);
         }
     }
 
@@ -79,6 +85,12 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
             @Override
             public void onClick(View view) {
                 eventService.remove(event);
+            }
+        });
+        holder.editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onEditEventOnClicked(event);
             }
         });
     }

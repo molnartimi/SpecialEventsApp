@@ -92,4 +92,9 @@ public class EventService extends BaseService<EventDao, EventEntity> {
             remove(event);
         }
     }
+
+    @Override
+    protected void entityUpdated(EventEntity entity) {
+        emitAllListeners();
+    }
 }
