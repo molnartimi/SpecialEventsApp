@@ -10,16 +10,18 @@ import android.widget.TextView;
 
 import hu.molti.specialevents.R;
 import hu.molti.specialevents.StartingActivity;
+import hu.molti.specialevents.common.EditBtnOnClickListener;
 import hu.molti.specialevents.common.RecyclerViewHelper;
+import hu.molti.specialevents.entities.EventEntity;
 
 public class MonthListAdapter extends RecyclerView.Adapter<MonthListAdapter.MonthViewHolder> {
     private int[] monthNameIds = {R.string.jan, R.string.febr, R.string.marc,
                                   R.string.apr, R.string.mai, R.string.jun,
                                   R.string.jul, R.string.aug, R.string.sept,
                                   R.string.oct, R.string.nov, R.string.dec};
-    private EventListAdapter.EditEventBtnOnCliskListener mListener;
+    private EditBtnOnClickListener<EventEntity> mListener;
 
-    public MonthListAdapter(EventListAdapter.EditEventBtnOnCliskListener listener) {
+    public MonthListAdapter(EditBtnOnClickListener<EventEntity> listener) {
         this.mListener = listener;
     }
 

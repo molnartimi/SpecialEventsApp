@@ -7,30 +7,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import hu.molti.specialevents.R;
 import hu.molti.specialevents.common.DataModificationListener;
+import hu.molti.specialevents.common.EditBtnOnClickListener;
 import hu.molti.specialevents.entities.PersonEntity;
 import hu.molti.specialevents.service.PersonService;
 
 public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.PersonViewHolder>
         implements DataModificationListener {
     private PersonService service;
+    private EditBtnOnClickListener<PersonEntity> mListener;
 
-    public PersonListAdapter() {
+    public PersonListAdapter(EditBtnOnClickListener<PersonEntity> listener) {
         service = PersonService.getService();
         service.setDataModificationListener(this, 0);
+        mListener = listener;
     }
 
     public class PersonViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
-        ImageButton deleteBtn;
+        ImageView editBtn, deleteBtn;
 
         PersonViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.person_list_row_name);
-            deleteBtn = view.findViewById(R.id.delete_person_btn);
+            editBtn = view.findViewById(R.id.person_list_row_edit_btn);
+            deleteBtn = view.findViewById(R.id.person_list_row_delete_btn);
         }
     }
 
@@ -48,6 +53,12 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.Pe
         final PersonEntity person = service.get(position);
         String name = person.getName();
         holder.name.setText(name);
+        holder.editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onEditBtnOnClicked(person);
+            }
+        });
         holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

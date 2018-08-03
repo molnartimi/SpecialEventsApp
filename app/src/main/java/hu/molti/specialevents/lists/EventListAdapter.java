@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import hu.molti.specialevents.R;
 import hu.molti.specialevents.common.DataModificationListener;
+import hu.molti.specialevents.common.EditBtnOnClickListener;
 import hu.molti.specialevents.common.RecyclerViewHelper;
 import hu.molti.specialevents.entities.EventEntity;
 import hu.molti.specialevents.service.EventService;
@@ -19,18 +20,14 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         implements DataModificationListener {
     private EventService eventService;
     private int monthIdx;
-    private EditEventBtnOnCliskListener mListener;
-
-    public interface EditEventBtnOnCliskListener {
-        void onEditEventOnClicked(EventEntity event);
-    }
+    private EditBtnOnClickListener<EventEntity> mListener;
 
     @Override
     public void changed() {
         notifyDataSetChanged();
     }
 
-    public EventListAdapter(int monthIdx, EditEventBtnOnCliskListener listener) {
+    public EventListAdapter(int monthIdx, EditBtnOnClickListener<EventEntity> listener) {
         this.monthIdx = monthIdx;
         eventService = EventService.getService();
         eventService.setDataModificationListener(this, monthIdx);
@@ -90,7 +87,7 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Even
         holder.editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onEditEventOnClicked(event);
+                mListener.onEditBtnOnClicked(event);
             }
         });
     }

@@ -14,22 +14,19 @@
         android:layout_height="wrap_content"
         android:textSize="25sp" />
 
-    <LinearLayout
-        android:id="@+id/person_list_row_buttons_layout"
-        android:layout_weight="0.5"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:gravity="end">
+    <ImageView
+        android:id="@+id/person_list_row_edit_btn"
+        android:layout_height="40dp"
+        android:layout_width="40dp"
+        app:srcCompat="@drawable/ic_edit_black_24dp"
+        android:contentDescription="@string/edit" />
 
-        <ImageButton
-            android:id="@+id/delete_person_btn"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:padding="10dp"
-            android:layout_gravity="center"
-            app:srcCompat="@drawable/ic_clear_black_24dp"
-            android:contentDescription="@string/delete" />
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/person_list_row_delete_btn"
+        android:layout_height="40dp"
+        android:layout_width="40dp"
+        app:srcCompat="@drawable/ic_delete_black_24dp"
+        android:contentDescription="@string/delete" />
 
 
 </LinearLayout>

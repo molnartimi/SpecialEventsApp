@@ -10,10 +10,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import hu.molti.specialevents.common.EditBtnOnClickListener;
 import hu.molti.specialevents.common.RecyclerViewHelper;
+import hu.molti.specialevents.entities.PersonEntity;
 import hu.molti.specialevents.lists.PersonListAdapter;
 
-public class PersonListActivity extends AppCompatActivity {
+public class PersonListActivity extends AppCompatActivity implements EditBtnOnClickListener<PersonEntity> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +23,7 @@ public class PersonListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_person_list);
         createToolbar();
         createFloatingActionBtn();
-        RecyclerViewHelper.initRecyclerView(findViewById(R.id.person_recycler_view), new PersonListAdapter());
+        RecyclerViewHelper.initRecyclerView(findViewById(R.id.person_recycler_view), new PersonListAdapter(PersonListActivity.this));
     }
 
     @Override
@@ -54,8 +56,17 @@ public class PersonListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new NewPersonDialogFragment().show(getSupportFragmentManager(), "DialogFragment");
+                new SavePersonDialogFragment().show(getSupportFragmentManager(), "DialogFragment");
             }
         });
+    }
+
+    @Override
+    public void onEditBtnOnClicked(PersonEntity personEntity) {
+        SavePersonDialogFragment dialog = new SavePersonDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("id", personEntity.getId());
+        dialog.setArguments(bundle);
+        dialog.show(getSupportFragmentManager(), "DialogFragment");
     }
 }

@@ -11,12 +11,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import hu.molti.specialevents.common.EditBtnOnClickListener;
 import hu.molti.specialevents.common.RecyclerViewHelper;
 import hu.molti.specialevents.entities.EventEntity;
-import hu.molti.specialevents.lists.EventListAdapter;
 import hu.molti.specialevents.lists.MonthListAdapter;
 
-public class EventListActivity extends AppCompatActivity implements EventListAdapter.EditEventBtnOnCliskListener {
+public class EventListActivity extends AppCompatActivity implements EditBtnOnClickListener<EventEntity> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,14 +57,14 @@ public class EventListActivity extends AppCompatActivity implements EventListAda
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new NewEventDialogFragment().show(getSupportFragmentManager(), "DialogFragment");
+                new SaveEventDialogFragment().show(getSupportFragmentManager(), "DialogFragment");
             }
         });
     }
 
     @Override
-    public void onEditEventOnClicked(EventEntity event) {
-        DialogFragment newEventDialog = new NewEventDialogFragment();
+    public void onEditBtnOnClicked(EventEntity event) {
+        DialogFragment newEventDialog = new SaveEventDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString("id", event.getId());
         newEventDialog.setArguments(bundle);

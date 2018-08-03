@@ -22,14 +22,14 @@ import hu.molti.specialevents.entities.EventEntity;
 import hu.molti.specialevents.lists.PersonSelectorAdapter;
 import hu.molti.specialevents.service.EventService;
 
-public class NewEventDialogFragment extends DialogFragment {
+public class SaveEventDialogFragment extends DialogFragment {
     private View dialogView;
     private Spinner typeSpinner, monthSpinner, daySpinner;
     private PersonSelectorAdapter personSelectorAdapter;
     private EventEntity event;
     private EventService eventService;
 
-    public NewEventDialogFragment() {
+    public SaveEventDialogFragment() {
         eventService = EventService.getService();
     }
 
