@@ -11,13 +11,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import hu.molti.specialevents.common.DataLoadedListener;
 import hu.molti.specialevents.common.EditEntityListener;
 import hu.molti.specialevents.common.RecyclerViewHelper;
 import hu.molti.specialevents.entities.PersonEntity;
 import hu.molti.specialevents.lists.PersonListAdapter;
+import hu.molti.specialevents.service.GiftService;
 import hu.molti.specialevents.service.PersonService;
 
-public class PersonListActivity extends AppCompatActivity implements EditEntityListener<PersonEntity> {
+public class PersonListActivity extends AppCompatActivity implements EditEntityListener<PersonEntity>,
+        PersonListAdapter.OpenGiftsListener, DataLoadedListener {
     private PersonService personService;
 
     @Override
@@ -26,7 +29,8 @@ public class PersonListActivity extends AppCompatActivity implements EditEntityL
         setContentView(R.layout.activity_person_list);
         createToolbar();
         createFloatingActionBtn();
-        RecyclerViewHelper.initRecyclerView(findViewById(R.id.person_recycler_view), new PersonListAdapter(PersonListActivity.this));
+        RecyclerViewHelper.initRecyclerView(findViewById(R.id.person_recycler_view),
+                new PersonListAdapter(PersonListActivity.this, PersonListActivity.this));
         personService = PersonService.getService();
     }
 
@@ -85,5 +89,15 @@ public class PersonListActivity extends AppCompatActivity implements EditEntityL
                     }
                 });
         dialog.show(getSupportFragmentManager(), "DialogFragment");
+    }
+
+    @Override
+    public void openGifts(String personId) {
+        GiftService.getService().loadGiftsOfPerson(personId, PersonListActivity.this);
+    }
+
+    @Override
+    public void dataIsLoaded() {
+        startActivity(new Intent(this, GiftListActivity.class));
     }
 }

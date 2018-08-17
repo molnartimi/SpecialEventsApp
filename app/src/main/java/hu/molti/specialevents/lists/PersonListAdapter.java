@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,23 +19,31 @@ import hu.molti.specialevents.service.PersonService;
 public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.PersonViewHolder>
         implements DataModificationListener {
     private PersonService service;
-    private EditEntityListener<PersonEntity> mListener;
+    private EditEntityListener<PersonEntity> editEntityListener;
+    private OpenGiftsListener giftListener;
 
-    public PersonListAdapter(EditEntityListener<PersonEntity> listener) {
+    public interface OpenGiftsListener {
+        void openGifts(String personId);
+    }
+
+    public PersonListAdapter(EditEntityListener<PersonEntity> listener, OpenGiftsListener giftListener) {
         service = PersonService.getService();
         service.setDataModificationListener(this, 0);
-        mListener = listener;
+        editEntityListener = listener;
+        this.giftListener = giftListener;
     }
 
     public class PersonViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
         ImageView editBtn, deleteBtn;
+        ImageButton giftBtn;
 
         PersonViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.person_list_row_name);
             editBtn = view.findViewById(R.id.person_list_row_edit_btn);
             deleteBtn = view.findViewById(R.id.person_list_row_delete_btn);
+            giftBtn = view.findViewById(R.id.person_list_row_gift_btn);
         }
     }
 
@@ -55,13 +64,19 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.Pe
         holder.editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onEditBtnOnClicked(person);
+                editEntityListener.onEditBtnOnClicked(person);
             }
         });
         holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onDeleteBtnOnClicked(person);
+                editEntityListener.onDeleteBtnOnClicked(person);
+            }
+        });
+        holder.giftBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                giftListener.openGifts(person.getId());
             }
         });
     }

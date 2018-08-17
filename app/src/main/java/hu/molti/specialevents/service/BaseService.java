@@ -25,7 +25,9 @@ public abstract class BaseService<Dao extends IDao<Entity>, Entity extends IEnti
             protected Void doInBackground(Void... voids) {
                 dataList = db.getAll();
                 afterDataLoaded();
-                callbackListener.dataIsLoaded();
+                if (callbackListener != null) {
+                    callbackListener.dataIsLoaded();
+                }
                 return null;
             }
         }.execute();

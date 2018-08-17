@@ -23,6 +23,9 @@
         <activity
             android:name=".PersonListActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".GiftListActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

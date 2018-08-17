@@ -36,4 +36,10 @@
     <string name="ok">Igen</string>
     <string name="confirm_delete_event_message">Biztosan törli az eseményt?</string>
     <string name="confirm_delete_person_message">Biztosan törli a személyt?</string>
+    <string name="gift_hints">Ajándék ötletek</string>
+    <string name="edit_person_dialog_title">Személy adatainak szerkesztése</string>
+    <string name="save_gift_dialog_title">Új ajándék hozzáadása</string>
+    <string name="edit_gift_dialog_title">Ajándék adatainak szerkesztése</string>
+    <string name="confirm_delete_gift_message">Biztosan törli az ajándékot?</string>
+    <string name="gift_activity_title_last_part">" ajándékötletei"</string>
 </resources>

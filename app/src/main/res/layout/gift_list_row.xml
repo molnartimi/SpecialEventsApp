@@ -7,33 +7,30 @@
     android:weightSum="1"
     android:background="@drawable/person_rectangular">
 
+    <CheckBox
+        android:id="@+id/gift_list_row_checkbox"
+        android:layout_width="40dp"
+        android:layout_height="20dp" />
     <TextView
-        android:id="@+id/person_list_row_name"
+        android:id="@+id/gift_list_row_name"
         android:layout_weight="0.5"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="25sp" />
+        android:textSize="20sp" />
 
     <ImageView
-        android:id="@+id/person_list_row_edit_btn"
+        android:id="@+id/gift_list_row_edit_btn"
         android:layout_height="40dp"
         android:layout_width="40dp"
         app:srcCompat="@drawable/ic_edit_black_24dp"
         android:contentDescription="@string/edit" />
 
     <ImageView
-        android:id="@+id/person_list_row_delete_btn"
+        android:id="@+id/gift_list_row_delete_btn"
         android:layout_height="40dp"
         android:layout_width="40dp"
         app:srcCompat="@drawable/ic_delete_black_24dp"
         android:contentDescription="@string/delete" />
-
-    <ImageButton
-        android:id="@+id/person_list_row_gift_btn"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:srcCompat="@drawable/ic_gift_black_24dp"
-        android:contentDescription="@string/gift_hints" />
 
 
 </LinearLayout>

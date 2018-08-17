@@ -12,20 +12,21 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import hu.molti.specialevents.entities.GiftEntity;
 import hu.molti.specialevents.entities.PersonEntity;
-import hu.molti.specialevents.service.PersonService;
+import hu.molti.specialevents.service.GiftService;
 
-public class SavePersonDialogFragment extends DialogFragment implements TextView.OnEditorActionListener {
-    private PersonService personService;
-    private PersonEntity person;
+public class SaveGiftDialogFragment extends DialogFragment implements TextView.OnEditorActionListener {
+    private GiftService giftService;
+    private GiftEntity gift;
 
-    public SavePersonDialogFragment() {
-        personService = PersonService.getService();
+    public SaveGiftDialogFragment() {
+        giftService = GiftService.getService();
     }
 
     @Override
     public void setArguments(Bundle bundle) {
-        person = personService.get(bundle.getString("id"));
+        gift = giftService.get(bundle.getString("id"));
     }
 
     @NonNull
@@ -33,21 +34,21 @@ public class SavePersonDialogFragment extends DialogFragment implements TextView
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final LayoutInflater inflater = getActivity().getLayoutInflater();
-        final View myView = inflater.inflate(R.layout.new_person_dialog, null);
-        final EditText nameText = myView.findViewById(R.id.new_person_name_text);
-        if (person != null) {
-            nameText.setText(person.getName());
+        final View myView = inflater.inflate(R.layout.new_gift_dialog, null);
+        final EditText nameText = myView.findViewById(R.id.new_gift_name_text);
+        if (gift != null) {
+            nameText.setText(gift.getName());
         }
 
         builder.setView(myView)
-                .setTitle((person == null) ? R.string.save_person_dialog_title : R.string.edit_person_dialog_title)
+                .setTitle((gift == null) ? R.string.save_gift_dialog_title : R.string.edit_gift_dialog_title)
                 .setPositiveButton(R.string.save_something, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        if (person == null) {
-                            personService.add(new PersonEntity(nameText.getText().toString()));
+                        if (gift == null) {
+                            giftService.add(new GiftEntity(giftService.getPersonId(), nameText.getText().toString()));
                         } else {
-                            person.setName(nameText.getText().toString());
-                            personService.update(person);
+                            gift.setName(nameText.getText().toString());
+                            giftService.update(gift);
                         }
 
                     }
