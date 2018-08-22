@@ -1,25 +1,15 @@
 package hu.molti.specialevents.lists;
 
-import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import hu.molti.specialevents.R;
-import hu.molti.specialevents.common.DataModificationListener;
 import hu.molti.specialevents.common.EditEntityListener;
 import hu.molti.specialevents.entities.PersonEntity;
-import hu.molti.specialevents.service.PersonService;
 
-public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.PersonViewHolder>
-        implements DataModificationListener {
-    private PersonService service;
-    private EditEntityListener<PersonEntity> editEntityListener;
+public class PersonListAdapter extends BaseListAdapter<PersonEntity> {
     private OpenGiftsListener giftListener;
 
     public interface OpenGiftsListener {
@@ -27,15 +17,12 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.Pe
     }
 
     public PersonListAdapter(EditEntityListener<PersonEntity> listener, OpenGiftsListener giftListener) {
-        service = PersonService.getService();
-        service.setDataModificationListener(this, 0);
-        editEntityListener = listener;
+        super(listener);
         this.giftListener = giftListener;
     }
 
-    public class PersonViewHolder extends RecyclerView.ViewHolder {
+    public class PersonViewHolder extends BaseListAdapter.ViewHolder {
         public TextView name;
-        ImageView editBtn, deleteBtn;
         ImageButton giftBtn;
 
         PersonViewHolder(View view) {
@@ -45,45 +32,49 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.Pe
             deleteBtn = view.findViewById(R.id.person_list_row_delete_btn);
             giftBtn = view.findViewById(R.id.person_list_row_gift_btn);
         }
+
+        public void setName(String name) {
+            this.name.setText(name);
+        }
+
+        public void setOnGiftBtnClick(final String personId) {
+            this.giftBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    giftListener.openGifts(personId);
+                }
+            });
+        }
     }
 
-    @NonNull
     @Override
-    public PersonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.person_list_row, parent, false);
+    protected void setDataModificationListeners() {
+        personService.setDataModificationListener(this, 0);
+    }
 
+    @Override
+    protected ViewHolder getNewViewHolder(View itemView) {
         return new PersonViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PersonViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-        final PersonEntity person = service.get(position);
-        String name = person.getName();
-        holder.name.setText(name);
-        holder.editBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editEntityListener.onEditBtnOnClicked(person);
-            }
-        });
-        holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editEntityListener.onDeleteBtnOnClicked(person);
-            }
-        });
-        holder.giftBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                giftListener.openGifts(person.getId());
-            }
-        });
+    protected int getListRowLayoutId() {
+        return R.layout.person_list_row;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull BaseListAdapter.ViewHolder viewHolder, int position) {
+        final PersonEntity person = personService.get(position);
+        PersonViewHolder personHolder = (PersonViewHolder) viewHolder;
+        personHolder.setName(person.getName());
+        personHolder.setOnEditBtnClick(person);
+        personHolder.setOnDeleteBtnClick(person);
+        personHolder.setOnGiftBtnClick(person.getId());
     }
 
     @Override
     public int getItemCount() {
-        return service.count();
+        return personService.count();
     }
 
     @Override

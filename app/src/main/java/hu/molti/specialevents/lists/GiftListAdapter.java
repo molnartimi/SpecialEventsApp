@@ -16,21 +16,22 @@ import hu.molti.specialevents.common.EditEntityListener;
 import hu.molti.specialevents.entities.GiftEntity;
 import hu.molti.specialevents.service.GiftService;
 
-public class GiftListAdapter extends RecyclerView.Adapter<GiftListAdapter.GiftViewHolder>
-        implements DataModificationListener {
+public class GiftListAdapter extends BaseListAdapter<GiftEntity> {
     private GiftService giftService;
-    private EditEntityListener<GiftEntity> mListener;
 
     public GiftListAdapter(EditEntityListener<GiftEntity> listener) {
+        super(listener);
         giftService = GiftService.getService();
+        // We can't put it into setDataModificationListeners, super call it before we create giftService :(
         giftService.setDataModificationListener(this, 0);
-        mListener = listener;
     }
 
-    public class GiftViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    protected void setDataModificationListeners() {}
+
+    public class GiftViewHolder extends BaseListAdapter.ViewHolder {
         public CheckBox doneCheckBox;
         public TextView name;
-        public ImageView editBtn, deleteBtn;
 
         GiftViewHolder(View view) {
             super(view);
@@ -39,51 +40,50 @@ public class GiftListAdapter extends RecyclerView.Adapter<GiftListAdapter.GiftVi
             editBtn = view.findViewById(R.id.gift_list_row_edit_btn);
             deleteBtn = view.findViewById(R.id.gift_list_row_delete_btn);
         }
+
+        public void setCheckBox(boolean done) {
+            this.doneCheckBox.setChecked(done);
+        }
+
+        public void setOnCheckBoxClick(final GiftEntity gift) {
+            this.doneCheckBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    gift.click();
+                    giftService.update(gift);
+                }
+            });
+        }
+
+        public void setName(String name) {
+            this.name.setText(name);
+        }
     }
 
-    @NonNull
     @Override
-    public GiftViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.gift_list_row, parent, false);
-
+    protected GiftViewHolder getNewViewHolder(View itemView) {
         return new GiftViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull GiftViewHolder holder, @SuppressLint("RecyclerView") final int position) {
+    protected int getListRowLayoutId() {
+        return R.layout.gift_list_row;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull BaseListAdapter.ViewHolder viewHolder, int position) {
         final GiftEntity gift = giftService.get(position);
-        holder.doneCheckBox.setChecked(gift.isDone());
-        holder.doneCheckBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                gift.click();
-                giftService.update(gift);
-            }
-        });
-        String name = gift.getName();
-        holder.name.setText(name);
-        holder.editBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.onEditBtnOnClicked(gift);
-            }
-        });
-        holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.onDeleteBtnOnClicked(gift);
-            }
-        });
+        GiftViewHolder giftHolder = (GiftViewHolder) viewHolder;
+
+        giftHolder.setCheckBox(gift.isDone());
+        giftHolder.setOnCheckBoxClick(gift);
+        giftHolder.setName(gift.getName());
+        giftHolder.setOnEditBtnClick(gift);
+        giftHolder.setOnDeleteBtnClick(gift);
     }
 
     @Override
     public int getItemCount() {
         return giftService.count();
-    }
-
-    @Override
-    public void changed() {
-        notifyDataSetChanged();
     }
 }

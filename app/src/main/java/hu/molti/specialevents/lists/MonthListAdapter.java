@@ -1,11 +1,9 @@
 package hu.molti.specialevents.lists;
 
-import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import hu.molti.specialevents.R;
@@ -14,18 +12,20 @@ import hu.molti.specialevents.common.EditEntityListener;
 import hu.molti.specialevents.common.RecyclerViewHelper;
 import hu.molti.specialevents.entities.EventEntity;
 
-public class MonthListAdapter extends RecyclerView.Adapter<MonthListAdapter.MonthViewHolder> {
+public class MonthListAdapter extends BaseListAdapter<EventEntity> {
     private int[] monthNameIds = {R.string.jan, R.string.febr, R.string.marc,
                                   R.string.apr, R.string.mai, R.string.jun,
                                   R.string.jul, R.string.aug, R.string.sept,
                                   R.string.oct, R.string.nov, R.string.dec};
-    private EditEntityListener<EventEntity> mListener;
 
     public MonthListAdapter(EditEntityListener<EventEntity> listener) {
-        this.mListener = listener;
+        super(listener);
     }
 
-    public class MonthViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    protected void setDataModificationListeners() {}
+
+    public class MonthViewHolder extends BaseListAdapter.ViewHolder {
         public TextView month;
         public RecyclerView eventsRecyclerView;
 
@@ -34,21 +34,35 @@ public class MonthListAdapter extends RecyclerView.Adapter<MonthListAdapter.Mont
             month = view.findViewById(R.id.month_list_row_name);
             eventsRecyclerView = view.findViewById(R.id.month_list_row_events_recycler_view);
         }
+
+        public void setMonthName(String monthName) {
+            this.month.setText(monthName);
+        }
+
+        public void initRecyclerView(EventListAdapter eventListAdapter) {
+            RecyclerViewHelper.initRecyclerView(eventsRecyclerView, eventListAdapter);
+        }
     }
 
-    @NonNull
     @Override
-    public MonthViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.month_list_row, parent, false);
-
+    protected MonthViewHolder getNewViewHolder(View itemView) {
         return new MonthViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MonthViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-        holder.month.setText(StartingActivity.getContext().getResources().getString(monthNameIds[position]));
-        RecyclerViewHelper.initRecyclerView(holder.eventsRecyclerView, new EventListAdapter(position, mListener));
+    protected int getListRowLayoutId() {
+        return R.layout.month_list_row;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull BaseListAdapter.ViewHolder viewHolder, int position) {
+        MonthViewHolder monthHolder = (MonthViewHolder) viewHolder;
+
+        Resources resources = StartingActivity.getContext().getResources();
+        String monthName = resources.getString(monthNameIds[position]);
+
+        monthHolder.setMonthName(monthName);
+        monthHolder.initRecyclerView(new EventListAdapter(position, editEntityListener));
     }
 
     @Override

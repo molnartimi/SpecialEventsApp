@@ -131,7 +131,7 @@ public class SaveEventDialogFragment extends DialogFragment {
             typeSpinner.setSelection(EventType.toInt(event.getType()));
             monthSpinner.setSelection(event.getMonth() - 1);
             daySpinner.setSelection(event.getDay() - 1);
-            personSelectorAdapter.setPersons(event.getPersonIds());
+            personSelectorAdapter.setPersonIds(event.getPersonIds());
         }
     }
 

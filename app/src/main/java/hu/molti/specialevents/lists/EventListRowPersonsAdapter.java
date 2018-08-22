@@ -14,40 +14,48 @@ import hu.molti.specialevents.R;
 import hu.molti.specialevents.entities.PersonEntity;
 import hu.molti.specialevents.service.PersonService;
 
-public class EventListRowPersonsAdapter extends RecyclerView.Adapter<EventListRowPersonsAdapter.PersonViewHolder> {
-    private PersonService service;
+public class EventListRowPersonsAdapter extends BaseListAdapter {
     private List<String> personIds;
 
     public EventListRowPersonsAdapter(List<String> personIds) {
-        service = PersonService.getService();
+        super();
         this.personIds = personIds;
     }
 
-    public class PersonViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    protected void setDataModificationListeners() {}
+
+    public class PersonViewHolder extends BaseListAdapter.ViewHolder {
         public TextView name;
 
         PersonViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.event_list_persons_row_name);
         }
+
+        public void setName(String name) {
+            this.name.setText(name);
+        }
     }
 
-    @NonNull
     @Override
-    public PersonViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.event_list_persons_row, parent, false);
-
+    protected PersonViewHolder getNewViewHolder(View itemView) {
         return new PersonViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PersonViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-        PersonEntity person = service.get(personIds.get(position));
-        if (person != null) {
-            holder.name.setText(person.getName());
-        }
+    protected int getListRowLayoutId() {
+        return R.layout.event_list_persons_row;
+    }
 
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+        PersonEntity person = personService.get(personIds.get(position));
+        PersonViewHolder personHolder = (PersonViewHolder) viewHolder;
+
+        if (person != null) {
+            personHolder.setName(person.getName());
+        }
     }
 
     @Override

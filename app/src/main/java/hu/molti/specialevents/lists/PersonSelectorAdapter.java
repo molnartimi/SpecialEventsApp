@@ -16,36 +16,19 @@ import hu.molti.specialevents.R;
 import hu.molti.specialevents.common.SpinnerHelper;
 import hu.molti.specialevents.service.PersonService;
 
-public class PersonSelectorAdapter extends RecyclerView.Adapter<PersonSelectorAdapter.SelectorViewHolder> {
-    private PersonService personService;
+public class PersonSelectorAdapter extends BaseListAdapter {
     private List<String> personIds;
 
     public PersonSelectorAdapter() {
-        personService = PersonService.getService();
+        super();
         personIds = new ArrayList<>();
         _addOne();
     }
 
-    public void addOne() {
-        _addOne();
-        dataSetChanged();
-    }
+    @Override
+    protected void setDataModificationListeners() {}
 
-    public List<String> getPersonIds() {
-        return personIds;
-    }
-
-    public void removeOne() {
-        personIds.remove(personIds.size() - 1);
-        dataSetChanged();
-    }
-
-    public void setPersons(List<String> personIds) {
-        this.personIds = new ArrayList<>(personIds);
-        dataSetChanged();
-    }
-
-    public class SelectorViewHolder extends RecyclerView.ViewHolder implements AdapterView.OnItemSelectedListener {
+    public class SelectorViewHolder extends BaseListAdapter.ViewHolder implements AdapterView.OnItemSelectedListener {
         public Spinner spinner;
         public int idx = 0;
 
@@ -63,21 +46,31 @@ public class PersonSelectorAdapter extends RecyclerView.Adapter<PersonSelectorAd
 
         @Override
         public void onNothingSelected(AdapterView<?> adapterView) {}
+
+        public void setIdx(int idx) {
+            this.idx = idx;
+        }
+
+        public void setPersonDropDown(int personIdx) {
+            this.spinner.setSelection(personIdx);
+        }
     }
 
-    @NonNull
     @Override
-    public SelectorViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.person_selector_row, parent, false);
-
+    protected SelectorViewHolder getNewViewHolder(View itemView) {
         return new SelectorViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SelectorViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-        holder.idx = position;
-        holder.spinner.setSelection(personService.getIdx(personIds.get(position)));
+    protected int getListRowLayoutId() {
+        return R.layout.person_selector_row;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+        SelectorViewHolder selectorHolder = (SelectorViewHolder) viewHolder;
+        selectorHolder.setIdx(position);
+        selectorHolder.setPersonDropDown(personService.getIdx(personIds.get(position)));
     }
 
     @Override
@@ -85,11 +78,26 @@ public class PersonSelectorAdapter extends RecyclerView.Adapter<PersonSelectorAd
         return personIds.size();
     }
 
-    private void _addOne() {
-        personIds.add(personService.get(0).getId());
+    public List<String> getPersonIds() {
+        return personIds;
     }
 
-    private void dataSetChanged() {
-        super.notifyDataSetChanged();
+    public void setPersonIds(List<String> personIds) {
+        this.personIds = new ArrayList<>(personIds);
+        notifyDataSetChanged();
+    }
+
+    public void addOne() {
+        _addOne();
+        notifyDataSetChanged();
+    }
+
+    public void removeOne() {
+        personIds.remove(personIds.size() - 1);
+        notifyDataSetChanged();
+    }
+
+    private void _addOne() {
+        personIds.add(personService.get(0).getId());
     }
 }
