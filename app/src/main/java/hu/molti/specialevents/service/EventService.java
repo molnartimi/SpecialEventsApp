@@ -34,6 +34,16 @@ public class EventService extends BaseService<EventDao, EventEntity> {
         return service;
     }
 
+    public List<EventEntity> getAll(String personId) {
+        List<EventEntity> events = new ArrayList<>();
+        for (EventEntity event: dataList) {
+            if (event.getPersonIds().contains(personId)) {
+                events.add(event);
+            }
+        }
+        return events;
+    }
+
     public EventEntity getInMonth(int monthIdx, int pos) {
         return eventsInMonths.get(monthIdx).get(pos);
     }
@@ -53,16 +63,19 @@ public class EventService extends BaseService<EventDao, EventEntity> {
     protected void entityAdded(EventEntity entity) {
         dataList.add(entity);
         int monthIdx = entity.getMonth() - 1;
+        insertEventToMonthList(entity, monthIdx);
+        emitListener(monthIdx);
+    }
+
+    private void insertEventToMonthList(EventEntity entity, int monthIdx) {
         List<EventEntity> events = eventsInMonths.get(monthIdx);
         for (int i = 0; i < events.size(); i++) {
             if (events.get(i).getDay() > entity.getDay()) {
                 events.add(i, entity);
-                emitListener(monthIdx);
                 return;
             }
         }
         events.add(entity);
-        emitListener(monthIdx);
     }
 
     @Override
@@ -96,5 +109,13 @@ public class EventService extends BaseService<EventDao, EventEntity> {
     @Override
     protected void entityUpdated(EventEntity entity) {
         emitAllListeners();
+    }
+
+    public void update(EventEntity event, int originMonth) {
+        if (originMonth != event.getMonth()) {
+            insertEventToMonthList(event, event.getMonth() - 1);
+            eventsInMonths.get(originMonth - 1).remove(event);
+        }
+        update(event);
     }
 }

@@ -1,0 +1,48 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_marginBottom="5dp"
+    android:weightSum="1"
+    android:background="@drawable/person_rectangular"
+    android:animateLayoutChanges="true">
+
+    <TextView
+        android:id="@+id/person_events_list_row_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.3"
+        android:layout_gravity="center"
+        android:textSize="20sp"/>
+
+    <ImageView
+        android:id="@+id/person_events_list_row_icon"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="0.2"
+        android:layout_marginRight="10dp"
+        android:contentDescription="@string/event_type_description" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/person_events_list_row_persons_recycler_view"
+        android:scrollbars="vertical"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.45"
+        android:layout_gravity="center"/>
+
+    <ImageView
+        android:id="@+id/person_events_list_row_edit_btn"
+        android:layout_height="40dp"
+        android:layout_width="40dp"
+        app:srcCompat="@drawable/ic_edit_black_24dp"
+        android:contentDescription="@string/edit" />
+
+    <ImageView
+        android:id="@+id/person_events_list_row_delete_btn"
+        android:layout_height="40dp"
+        android:layout_width="40dp"
+        app:srcCompat="@drawable/ic_delete_black_24dp"
+        android:contentDescription="@string/delete" />
+</LinearLayout>

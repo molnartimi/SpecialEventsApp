@@ -42,4 +42,5 @@
     <string name="edit_gift_dialog_title">Ajándék adatainak szerkesztése</string>
     <string name="confirm_delete_gift_message">Biztosan törli az ajándékot?</string>
     <string name="gift_activity_title_last_part">" ajándékötletei"</string>
+    <string name="person_events_activity_title_last_part">" ünnepei"</string>
 </resources>

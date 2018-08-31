@@ -23,15 +23,12 @@ abstract public class BaseListAdapter<Entity> extends RecyclerView.Adapter<BaseL
     public BaseListAdapter() {
         personService = PersonService.getService();
         eventService = EventService.getService();
-        setDataModificationListeners();
     }
 
     public BaseListAdapter(EditEntityListener<Entity> listener) {
         this();
         editEntityListener = listener;
     }
-
-    protected abstract void setDataModificationListeners();
 
     protected class ViewHolder extends RecyclerView.ViewHolder {
         protected ImageView editBtn, deleteBtn;

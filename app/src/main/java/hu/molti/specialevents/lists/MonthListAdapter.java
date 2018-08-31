@@ -20,10 +20,8 @@ public class MonthListAdapter extends BaseListAdapter<EventEntity> {
 
     public MonthListAdapter(EditEntityListener<EventEntity> listener) {
         super(listener);
+        eventService.setDataModificationListener(this, 0);
     }
-
-    @Override
-    protected void setDataModificationListeners() {}
 
     public class MonthViewHolder extends BaseListAdapter.ViewHolder {
         public TextView month;

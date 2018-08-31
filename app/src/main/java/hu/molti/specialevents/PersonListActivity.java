@@ -20,7 +20,7 @@ import hu.molti.specialevents.service.GiftService;
 import hu.molti.specialevents.service.PersonService;
 
 public class PersonListActivity extends AppCompatActivity implements EditEntityListener<PersonEntity>,
-        PersonListAdapter.OpenGiftsListener, DataLoadedListener {
+        PersonListAdapter.OpenGiftsListener, PersonListAdapter.OpenPersonEventsListener, DataLoadedListener {
     private PersonService personService;
 
     @Override
@@ -30,7 +30,7 @@ public class PersonListActivity extends AppCompatActivity implements EditEntityL
         createToolbar();
         createFloatingActionBtn();
         RecyclerViewHelper.initRecyclerView(findViewById(R.id.person_recycler_view),
-                new PersonListAdapter(PersonListActivity.this, PersonListActivity.this));
+                new PersonListAdapter(PersonListActivity.this, PersonListActivity.this, PersonListActivity.this));
         personService = PersonService.getService();
     }
 
@@ -99,5 +99,12 @@ public class PersonListActivity extends AppCompatActivity implements EditEntityL
     @Override
     public void dataIsLoaded() {
         startActivity(new Intent(this, GiftListActivity.class));
+    }
+
+    @Override
+    public void openPersonEvents(String personId) {
+        Intent intent = new Intent(this, PersonEventsListActivity.class);
+        intent.putExtra("personId", personId);
+        startActivity(intent);
     }
 }

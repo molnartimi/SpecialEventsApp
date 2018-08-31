@@ -22,12 +22,8 @@ public class GiftListAdapter extends BaseListAdapter<GiftEntity> {
     public GiftListAdapter(EditEntityListener<GiftEntity> listener) {
         super(listener);
         giftService = GiftService.getService();
-        // We can't put it into setDataModificationListeners, super call it before we create giftService :(
         giftService.setDataModificationListener(this, 0);
     }
-
-    @Override
-    protected void setDataModificationListeners() {}
 
     public class GiftViewHolder extends BaseListAdapter.ViewHolder {
         public CheckBox doneCheckBox;
@@ -72,7 +68,7 @@ public class GiftListAdapter extends BaseListAdapter<GiftEntity> {
 
     @Override
     public void onBindViewHolder(@NonNull BaseListAdapter.ViewHolder viewHolder, int position) {
-        final GiftEntity gift = giftService.get(position);
+        GiftEntity gift = giftService.get(position);
         GiftViewHolder giftHolder = (GiftViewHolder) viewHolder;
 
         giftHolder.setCheckBox(gift.isDone());

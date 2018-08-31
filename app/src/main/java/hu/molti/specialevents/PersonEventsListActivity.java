@@ -12,48 +12,47 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import hu.molti.specialevents.common.DataLoadedListener;
 import hu.molti.specialevents.common.EditEntityListener;
 import hu.molti.specialevents.common.RecyclerViewHelper;
 import hu.molti.specialevents.entities.EventEntity;
 import hu.molti.specialevents.lists.MonthListAdapter;
+import hu.molti.specialevents.lists.PersonEventsListAdapter;
+import hu.molti.specialevents.lists.PersonListAdapter;
 import hu.molti.specialevents.service.EventService;
+import hu.molti.specialevents.service.GiftService;
+import hu.molti.specialevents.service.PersonService;
 
-public class EventListActivity extends AppCompatActivity implements EditEntityListener<EventEntity> {
+public class PersonEventsListActivity extends AppCompatActivity implements
+        EditEntityListener<EventEntity>, DataLoadedListener {
     private EventService eventService;
+    private String personId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_list);
+        setContentView(R.layout.activity_person_events_list);
+
+        personId = getIntent().getStringExtra("personId");
+
         createToolbar();
         createFloatingActionBtn();
-        RecyclerViewHelper.initRecyclerView(findViewById(R.id.month_recycler_view), new MonthListAdapter(EventListActivity.this));
+
+        RecyclerViewHelper.initRecyclerView(findViewById(R.id.person_events_recycler_view),
+                new PersonEventsListAdapter(personId, PersonEventsListActivity.this));
         eventService = EventService.getService();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_persons:
-                startActivity(new Intent(this, PersonListActivity.class));
-                break;
-            default:
-                break;
-        }
-
-        return true;
-    }
-
     private void createToolbar() {
-        Toolbar toolbar = findViewById(R.id.event_list_toolbar);
-        setSupportActionBar(toolbar);
+        Toolbar toolbar = findViewById(R.id.person_events_list_toolbar);
+        toolbar.setTitle(PersonService.getService().get(personId).getName() +
+                getString(R.string.person_events_activity_title_last_part));
+        findViewById(R.id.gift_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GiftService.getService().loadGiftsOfPerson(personId, PersonEventsListActivity.this);
+            }
+        });
     }
 
     private void createFloatingActionBtn() {
@@ -61,6 +60,7 @@ public class EventListActivity extends AppCompatActivity implements EditEntityLi
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // TODO az ember itt csak ő lehessen + még aki kell
                 new SaveEventDialogFragment().show(getSupportFragmentManager(), "DialogFragment");
             }
         });
@@ -68,6 +68,7 @@ public class EventListActivity extends AppCompatActivity implements EditEntityLi
 
     @Override
     public void onEditBtnOnClicked(EventEntity event) {
+        // TODO emberek közül őt ne lehessen törölni
         DialogFragment newEventDialog = new SaveEventDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString("id", event.getId());
@@ -87,4 +88,11 @@ public class EventListActivity extends AppCompatActivity implements EditEntityLi
         });
         dialog.show(getSupportFragmentManager(), "DialogFragment");
     }
+
+    @Override
+    public void dataIsLoaded() {
+        startActivity(new Intent(this, GiftListActivity.class));
+    }
+
+    // TODO itt ne lehessen törölni, módosítani a személyt
 }

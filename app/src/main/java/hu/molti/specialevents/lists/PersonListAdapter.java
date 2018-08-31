@@ -11,14 +11,22 @@ import hu.molti.specialevents.entities.PersonEntity;
 
 public class PersonListAdapter extends BaseListAdapter<PersonEntity> {
     private OpenGiftsListener giftListener;
+    private OpenPersonEventsListener personEventsListener;
 
     public interface OpenGiftsListener {
         void openGifts(String personId);
     }
 
-    public PersonListAdapter(EditEntityListener<PersonEntity> listener, OpenGiftsListener giftListener) {
+    public interface OpenPersonEventsListener {
+        void openPersonEvents(String personId);
+    }
+
+    public PersonListAdapter(EditEntityListener<PersonEntity> listener, OpenGiftsListener giftListener,
+                             OpenPersonEventsListener personEventsListener) {
         super(listener);
         this.giftListener = giftListener;
+        this.personEventsListener = personEventsListener;
+        personService.setDataModificationListener(this, 0);
     }
 
     public class PersonViewHolder extends BaseListAdapter.ViewHolder {
@@ -45,11 +53,15 @@ public class PersonListAdapter extends BaseListAdapter<PersonEntity> {
                 }
             });
         }
-    }
 
-    @Override
-    protected void setDataModificationListeners() {
-        personService.setDataModificationListener(this, 0);
+        public void setOnClick(final String id) {
+            itemView.findViewById(R.id.person_item).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    personEventsListener.openPersonEvents(id);
+                }
+            });
+        }
     }
 
     @Override
@@ -64,12 +76,13 @@ public class PersonListAdapter extends BaseListAdapter<PersonEntity> {
 
     @Override
     public void onBindViewHolder(@NonNull BaseListAdapter.ViewHolder viewHolder, int position) {
-        final PersonEntity person = personService.get(position);
+        PersonEntity person = personService.get(position);
         PersonViewHolder personHolder = (PersonViewHolder) viewHolder;
         personHolder.setName(person.getName());
         personHolder.setOnEditBtnClick(person);
         personHolder.setOnDeleteBtnClick(person);
         personHolder.setOnGiftBtnClick(person.getId());
+        personHolder.setOnClick(person.getId());
     }
 
     @Override

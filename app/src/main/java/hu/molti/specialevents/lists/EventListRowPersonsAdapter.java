@@ -22,9 +22,6 @@ public class EventListRowPersonsAdapter extends BaseListAdapter {
         this.personIds = personIds;
     }
 
-    @Override
-    protected void setDataModificationListeners() {}
-
     public class PersonViewHolder extends BaseListAdapter.ViewHolder {
         public TextView name;
 

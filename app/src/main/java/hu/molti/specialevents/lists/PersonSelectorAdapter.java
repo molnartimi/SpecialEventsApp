@@ -1,11 +1,8 @@
 package hu.molti.specialevents.lists;
 
-import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 
@@ -14,7 +11,6 @@ import java.util.List;
 
 import hu.molti.specialevents.R;
 import hu.molti.specialevents.common.SpinnerHelper;
-import hu.molti.specialevents.service.PersonService;
 
 public class PersonSelectorAdapter extends BaseListAdapter {
     private List<String> personIds;
@@ -24,9 +20,6 @@ public class PersonSelectorAdapter extends BaseListAdapter {
         personIds = new ArrayList<>();
         _addOne();
     }
-
-    @Override
-    protected void setDataModificationListeners() {}
 
     public class SelectorViewHolder extends BaseListAdapter.ViewHolder implements AdapterView.OnItemSelectedListener {
         public Spinner spinner;

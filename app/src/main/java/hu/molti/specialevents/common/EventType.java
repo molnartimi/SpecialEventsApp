@@ -25,6 +25,15 @@ public enum EventType {
         return resources.getString(id);
     }
 
+    public int getIconId() {
+        switch (this) {
+            case BIRTHDAY:      return R.drawable.ic_cake_white_24dp;
+            case NAMEDAY:       return R.drawable.ic_flower_white_24dp;
+            case ANNIVERSARY:   return R.drawable.ic_heart_white_24dp;
+            default:            return -1;
+        }
+    }
+
     public static List<String> stringList() {
         List<String> strings = new ArrayList<>();
         for (EventType type: values()) {

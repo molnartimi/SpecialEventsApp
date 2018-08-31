@@ -14,20 +14,24 @@ public abstract class BaseService<Dao extends IDao<Entity>, Entity extends IEnti
     protected HashMap<Integer, DataModificationListener> dataModificationListeners = new HashMap<>();
     protected Dao db;
     protected List<Entity> dataList;
+    protected boolean loaded = false;
 
     public void setDataModificationListener(DataModificationListener listener, int id) {
         dataModificationListeners.put(id, listener);
     }
 
     public void loadData(final DataLoadedListener callbackListener) {
+        if (loaded) {
+            callbackListener.dataIsLoaded();
+            return;
+        }
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
                 dataList = db.getAll();
                 afterDataLoaded();
-                if (callbackListener != null) {
-                    callbackListener.dataIsLoaded();
-                }
+                callbackListener.dataIsLoaded();
+                loaded = true;
                 return null;
             }
         }.execute();

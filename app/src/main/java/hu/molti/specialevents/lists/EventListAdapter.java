@@ -8,7 +8,6 @@ import android.widget.TextView;
 
 import hu.molti.specialevents.R;
 import hu.molti.specialevents.common.EditEntityListener;
-import hu.molti.specialevents.common.EventType;
 import hu.molti.specialevents.common.RecyclerViewHelper;
 import hu.molti.specialevents.entities.EventEntity;
 
@@ -18,10 +17,6 @@ public class EventListAdapter extends BaseListAdapter<EventEntity> {
     public EventListAdapter(int monthIdx, EditEntityListener<EventEntity> listener) {
         super(listener);
         this.monthIdx = monthIdx;
-    }
-
-    @Override
-    protected void setDataModificationListeners() {
         eventService.setDataModificationListener(this, monthIdx);
     }
 
@@ -64,11 +59,11 @@ public class EventListAdapter extends BaseListAdapter<EventEntity> {
 
     @Override
     public void onBindViewHolder(@NonNull BaseListAdapter.ViewHolder viewHolder, int position) {
-        final EventEntity event = eventService.getInMonth(monthIdx, position);
+        EventEntity event = eventService.getInMonth(monthIdx, position);
         EventViewHolder eventHolder = (EventViewHolder) viewHolder;
         eventHolder.setDate(event.getDay() + ".");
         eventHolder.initRecyclerView(new EventListRowPersonsAdapter(event.getPersonIds()));
-        eventHolder.setIcon(getEventIconId(event.getType()));
+        eventHolder.setIcon(event.getType().getIconId());
         eventHolder.setOnEditBtnClick(event);
         eventHolder.setOnDeleteBtnClick(event);
     }
@@ -76,14 +71,5 @@ public class EventListAdapter extends BaseListAdapter<EventEntity> {
     @Override
     public int getItemCount() {
         return eventService.getCountInMonth(monthIdx);
-    }
-
-    private int getEventIconId(EventType eventType) {
-        switch (eventType) {
-            case BIRTHDAY:      return R.drawable.ic_cake_white_24dp;
-            case NAMEDAY:       return R.drawable.ic_flower_white_24dp;
-            case ANNIVERSARY:   return R.drawable.ic_heart_white_24dp;
-            default:            return -1;
-        }
     }
 }

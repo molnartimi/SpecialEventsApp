@@ -27,6 +27,7 @@ public class SaveEventDialogFragment extends DialogFragment {
     private Spinner typeSpinner, monthSpinner, daySpinner;
     private PersonSelectorAdapter personSelectorAdapter;
     private EventEntity event;
+    private int originMonth = 0;
     private EventService eventService;
 
     public SaveEventDialogFragment() {
@@ -36,6 +37,9 @@ public class SaveEventDialogFragment extends DialogFragment {
     @Override
     public void setArguments(Bundle bundle) {
         event = eventService.get(bundle.getString("id"));
+        if (event != null) {
+            originMonth = event.getMonth();
+        }
     }
 
     @NonNull
@@ -54,7 +58,7 @@ public class SaveEventDialogFragment extends DialogFragment {
                         if (event == null) {
                             eventService.add(getEvent());
                         } else {
-                            eventService.update(getEvent());
+                            eventService.update(getEvent(), originMonth);
                         }
 
                     }
