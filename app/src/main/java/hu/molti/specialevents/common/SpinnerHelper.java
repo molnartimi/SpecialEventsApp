@@ -6,7 +6,7 @@ import android.widget.Spinner;
 
 import java.util.List;
 
-import hu.molti.specialevents.StartingActivity;
+import hu.molti.specialevents.activity.StartingActivity;
 
 public class SpinnerHelper {
 

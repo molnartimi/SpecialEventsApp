@@ -3,16 +3,11 @@ package hu.molti.specialevents.service;
 import android.arch.persistence.room.Room;
 import android.os.AsyncTask;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import hu.molti.specialevents.StartingActivity;
-import hu.molti.specialevents.common.DataLoadedListener;
-import hu.molti.specialevents.dao.GiftDao;
-import hu.molti.specialevents.database.GiftDatabase;
-import hu.molti.specialevents.entities.GiftEntity;
+import hu.molti.specialevents.activity.StartingActivity;
+import hu.molti.specialevents.listener.DataLoadedListener;
+import hu.molti.specialevents.db.dao.GiftDao;
+import hu.molti.specialevents.db.database.GiftDatabase;
+import hu.molti.specialevents.entity.GiftEntity;
 
 public class GiftService extends BaseService<GiftDao, GiftEntity> {
     private static GiftService service;

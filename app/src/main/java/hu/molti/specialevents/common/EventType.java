@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import hu.molti.specialevents.R;
-import hu.molti.specialevents.StartingActivity;
+import hu.molti.specialevents.activity.StartingActivity;
 
 public enum EventType {
     BIRTHDAY, NAMEDAY, ANNIVERSARY;

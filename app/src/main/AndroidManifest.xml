@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".StartingActivity"
+            android:name=".activity.StartingActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:noHistory="true">
             <intent-filter>
@@ -19,16 +19,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".EventListActivity"
+            android:name=".activity.EventListActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".PersonListActivity"
+            android:name=".activity.PersonListActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".PersonEventsListActivity"
+            android:name=".activity.PersonEventsListActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".GiftListActivity"
+            android:name=".activity.GiftListActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:noHistory="true"/>
     </application>

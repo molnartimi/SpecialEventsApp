@@ -1,15 +1,14 @@
 package hu.molti.specialevents.service;
 
 import android.arch.persistence.room.Room;
-import android.os.AsyncTask;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import hu.molti.specialevents.StartingActivity;
-import hu.molti.specialevents.dao.EventDao;
-import hu.molti.specialevents.database.EventDatabase;
-import hu.molti.specialevents.entities.EventEntity;
+import hu.molti.specialevents.activity.StartingActivity;
+import hu.molti.specialevents.db.dao.EventDao;
+import hu.molti.specialevents.db.database.EventDatabase;
+import hu.molti.specialevents.entity.EventEntity;
 
 public class EventService extends BaseService<EventDao, EventEntity> {
     private static EventService service;

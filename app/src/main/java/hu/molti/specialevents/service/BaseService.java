@@ -5,10 +5,10 @@ import android.os.AsyncTask;
 import java.util.HashMap;
 import java.util.List;
 
-import hu.molti.specialevents.common.DataLoadedListener;
-import hu.molti.specialevents.common.DataModificationListener;
-import hu.molti.specialevents.dao.IDao;
-import hu.molti.specialevents.entities.IEntity;
+import hu.molti.specialevents.listener.DataLoadedListener;
+import hu.molti.specialevents.listener.DataModificationListener;
+import hu.molti.specialevents.db.dao.IDao;
+import hu.molti.specialevents.entity.IEntity;
 
 public abstract class BaseService<Dao extends IDao<Entity>, Entity extends IEntity<Entity>> {
     protected HashMap<Integer, DataModificationListener> dataModificationListeners = new HashMap<>();

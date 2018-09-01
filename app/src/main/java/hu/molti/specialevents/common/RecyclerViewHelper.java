@@ -4,7 +4,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import hu.molti.specialevents.StartingActivity;
+import hu.molti.specialevents.activity.StartingActivity;
 
 public class RecyclerViewHelper {
 

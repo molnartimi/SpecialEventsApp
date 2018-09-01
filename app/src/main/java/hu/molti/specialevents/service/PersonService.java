@@ -2,10 +2,10 @@ package hu.molti.specialevents.service;
 
 import android.arch.persistence.room.Room;
 
-import hu.molti.specialevents.StartingActivity;
-import hu.molti.specialevents.dao.PersonDao;
-import hu.molti.specialevents.database.PersonDatabase;
-import hu.molti.specialevents.entities.PersonEntity;
+import hu.molti.specialevents.activity.StartingActivity;
+import hu.molti.specialevents.db.dao.PersonDao;
+import hu.molti.specialevents.db.database.PersonDatabase;
+import hu.molti.specialevents.entity.PersonEntity;
 
 public class PersonService extends BaseService<PersonDao, PersonEntity> {
     private static PersonService service;
