@@ -14,6 +14,7 @@ import hu.molti.specialevents.common.SpinnerHelper;
 
 public class PersonSelectorAdapter extends BaseListAdapter {
     private List<String> personIds;
+    public static final String ID = "PSA";
 
     public PersonSelectorAdapter() {
         super();

@@ -12,6 +12,7 @@ import hu.molti.specialevents.entity.PersonEntity;
 public class PersonListAdapter extends BaseListAdapter<PersonEntity> {
     private OpenGiftsListener giftListener;
     private OpenPersonEventsListener personEventsListener;
+    public static final String ID = "PA";
 
     public interface OpenGiftsListener {
         void openGifts(String personId);
@@ -26,7 +27,7 @@ public class PersonListAdapter extends BaseListAdapter<PersonEntity> {
         super(listener);
         this.giftListener = giftListener;
         this.personEventsListener = personEventsListener;
-        personService.setDataModificationListener(this, 0);
+        personService.setDataModificationListener(this, ID);
     }
 
     public class PersonViewHolder extends BaseListAdapter.ViewHolder {

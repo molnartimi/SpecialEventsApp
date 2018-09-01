@@ -63,7 +63,7 @@ public class EventService extends BaseService<EventDao, EventEntity> {
         dataList.add(entity);
         int monthIdx = entity.getMonth() - 1;
         insertEventToMonthList(entity, monthIdx);
-        emitListener(monthIdx);
+        emitAllListeners();
     }
 
     private void insertEventToMonthList(EventEntity entity, int monthIdx) {
@@ -82,7 +82,7 @@ public class EventService extends BaseService<EventDao, EventEntity> {
         dataList.remove(entity);
         int monthIdx = entity.getMonth() - 1;
         eventsInMonths.get(monthIdx).remove(entity);
-        emitListener(monthIdx);
+        emitAllListeners();
     }
 
     public void removePersonFromEvents(final String personId) {

@@ -11,12 +11,12 @@ import hu.molti.specialevents.db.dao.IDao;
 import hu.molti.specialevents.entity.IEntity;
 
 public abstract class BaseService<Dao extends IDao<Entity>, Entity extends IEntity<Entity>> {
-    protected HashMap<Integer, DataModificationListener> dataModificationListeners = new HashMap<>();
+    protected HashMap<String, DataModificationListener> dataModificationListeners = new HashMap<>();
     protected Dao db;
     protected List<Entity> dataList;
     protected boolean loaded = false;
 
-    public void setDataModificationListener(DataModificationListener listener, int id) {
+    public void setDataModificationListener(DataModificationListener listener, String id) {
         dataModificationListeners.put(id, listener);
     }
 
@@ -91,10 +91,6 @@ public abstract class BaseService<Dao extends IDao<Entity>, Entity extends IEnti
         }.execute();
     }
 
-    protected void emitListener(int id) {
-        dataModificationListeners.get(id).changed();
-    }
-
     protected void emitAllListeners() {
         for (DataModificationListener listener: dataModificationListeners.values()) {
             listener.changed();
@@ -105,16 +101,16 @@ public abstract class BaseService<Dao extends IDao<Entity>, Entity extends IEnti
 
     protected void entityAdded(Entity entity) {
         dataList.add(entity);
-        emitListener(0);
+        emitAllListeners();
     }
 
     protected void entityRemoved(Entity entity) {
         dataList.remove(entity);
-        emitListener(0);
+        emitAllListeners();
     }
 
     protected void entityUpdated(Entity entity) {
-        emitListener(0);
+        emitAllListeners();
     }
 
 }

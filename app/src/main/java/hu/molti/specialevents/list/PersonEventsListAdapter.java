@@ -17,12 +17,13 @@ import hu.molti.specialevents.entity.EventEntity;
 public class PersonEventsListAdapter extends BaseListAdapter<EventEntity> {
     private String personId;
     private List<EventEntity> events;
+    public static final String ID = "PEA";
 
     public PersonEventsListAdapter(String personId, EditEntityListener<EventEntity> listener) {
         super(listener);
         this.personId = personId;
         this.events = eventService.getAll(personId);
-        eventService.setDataModificationListener(this, 0);
+        eventService.setDataModificationListener(this, ID);
     }
 
     public class EventViewHolder extends BaseListAdapter.ViewHolder {
@@ -84,5 +85,11 @@ public class PersonEventsListAdapter extends BaseListAdapter<EventEntity> {
     @Override
     public int getItemCount() {
         return events.size();
+    }
+
+    @Override
+    public void changed() {
+        this.events = eventService.getAll(personId);
+        notifyDataSetChanged();
     }
 }

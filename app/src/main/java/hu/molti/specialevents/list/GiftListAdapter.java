@@ -12,11 +12,12 @@ import hu.molti.specialevents.service.GiftService;
 
 public class GiftListAdapter extends BaseListAdapter<GiftEntity> {
     private GiftService giftService;
+    public static final String ID = "GA";
 
     public GiftListAdapter(EditEntityListener<GiftEntity> listener) {
         super(listener);
         giftService = GiftService.getService();
-        giftService.setDataModificationListener(this, 0);
+        giftService.setDataModificationListener(this, ID);
     }
 
     public class GiftViewHolder extends BaseListAdapter.ViewHolder {

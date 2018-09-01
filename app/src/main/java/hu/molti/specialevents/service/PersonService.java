@@ -29,18 +29,18 @@ public class PersonService extends BaseService<PersonDao, PersonEntity> {
         for (int i = 0; i < dataList.size(); i++) {
             if (dataList.get(i).getName().compareTo(person.getName()) > 0) {
                 dataList.add(i, person);
-                emitListener(0);
+                emitAllListeners();
                 return;
             }
         }
         dataList.add(person);
-        emitListener(0);
+        emitAllListeners();
     }
 
     @Override
     protected void entityRemoved(PersonEntity entity) {
         dataList.remove(entity);
-        emitListener(0);
+        emitAllListeners();
         eventService.removePersonFromEvents(entity.getId());
 
     }

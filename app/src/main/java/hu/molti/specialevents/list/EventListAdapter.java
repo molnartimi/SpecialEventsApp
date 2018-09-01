@@ -13,11 +13,12 @@ import hu.molti.specialevents.entity.EventEntity;
 
 public class EventListAdapter extends BaseListAdapter<EventEntity> {
     private int monthIdx;
+    public static final String ID = "EA";
 
     public EventListAdapter(int monthIdx, EditEntityListener<EventEntity> listener) {
         super(listener);
         this.monthIdx = monthIdx;
-        eventService.setDataModificationListener(this, monthIdx);
+        eventService.setDataModificationListener(this, ID + monthIdx);
     }
 
     public class EventViewHolder extends BaseListAdapter.ViewHolder {

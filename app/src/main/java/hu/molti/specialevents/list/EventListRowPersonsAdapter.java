@@ -12,6 +12,7 @@ import hu.molti.specialevents.entity.PersonEntity;
 
 public class EventListRowPersonsAdapter extends BaseListAdapter {
     private List<String> personIds;
+    public static final String ID = "EPA";
 
     public EventListRowPersonsAdapter(List<String> personIds) {
         super();

@@ -17,10 +17,11 @@ public class MonthListAdapter extends BaseListAdapter<EventEntity> {
                                   R.string.apr, R.string.mai, R.string.jun,
                                   R.string.jul, R.string.aug, R.string.sept,
                                   R.string.oct, R.string.nov, R.string.dec};
+    public static final String ID = "MA";
 
     public MonthListAdapter(EditEntityListener<EventEntity> listener) {
         super(listener);
-        eventService.setDataModificationListener(this, 0);
+        eventService.setDataModificationListener(this, ID);
     }
 
     public class MonthViewHolder extends BaseListAdapter.ViewHolder {
