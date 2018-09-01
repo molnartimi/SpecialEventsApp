@@ -14,6 +14,7 @@ import hu.molti.specialevents.common.SpinnerHelper;
 
 public class PersonSelectorAdapter extends BaseListAdapter {
     private List<String> personIds;
+    private boolean fixedFirstPerson = false;
     public static final String ID = "PSA";
 
     public PersonSelectorAdapter() {
@@ -48,6 +49,11 @@ public class PersonSelectorAdapter extends BaseListAdapter {
         public void setPersonDropDown(int personIdx) {
             this.spinner.setSelection(personIdx);
         }
+
+        public void fix() {
+            spinner.setEnabled(false);
+            spinner.setClickable(false);
+        }
     }
 
     @Override
@@ -65,6 +71,9 @@ public class PersonSelectorAdapter extends BaseListAdapter {
         SelectorViewHolder selectorHolder = (SelectorViewHolder) viewHolder;
         selectorHolder.setIdx(position);
         selectorHolder.setPersonDropDown(personService.getIdx(personIds.get(position)));
+        if (fixedFirstPerson && position == 0) {
+            selectorHolder.fix();
+        }
     }
 
     @Override
@@ -78,6 +87,16 @@ public class PersonSelectorAdapter extends BaseListAdapter {
 
     public void setPersonIds(List<String> personIds) {
         this.personIds = new ArrayList<>(personIds);
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Use to set first person uneditable, in case of activity PersonEventsActivity
+     * @param personId
+     */
+    public void setFirstPersonId(String personId) {
+        this.personIds.set(0, personId);
+        fixedFirstPerson = true;
         notifyDataSetChanged();
     }
 

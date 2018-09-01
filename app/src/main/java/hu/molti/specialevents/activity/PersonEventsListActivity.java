@@ -58,8 +58,11 @@ public class PersonEventsListActivity extends AppCompatActivity implements
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO az ember itt csak ő lehessen + még aki kell
-                new SaveEventDialogFragment().show(getSupportFragmentManager(), "DialogFragment");
+                SaveEventDialogFragment dialog = new SaveEventDialogFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("personId", personId);
+                dialog.setArguments(bundle);
+                dialog.show(getSupportFragmentManager(), "DialogFragment");
             }
         });
     }
