@@ -3,9 +3,11 @@ package hu.molti.specialevents.service;
 import android.arch.persistence.room.Room;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import hu.molti.specialevents.activity.StartingActivity;
+import hu.molti.specialevents.common.EventComparator;
 import hu.molti.specialevents.db.dao.EventDao;
 import hu.molti.specialevents.db.database.EventDatabase;
 import hu.molti.specialevents.entity.EventEntity;
@@ -40,6 +42,7 @@ public class EventService extends BaseService<EventDao, EventEntity> {
                 events.add(event);
             }
         }
+        Collections.sort(events, new EventComparator());
         return events;
     }
 

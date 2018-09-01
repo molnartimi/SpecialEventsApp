@@ -67,7 +67,7 @@ public class PersonEventsListAdapter extends BaseListAdapter<EventEntity> {
     public void onBindViewHolder(@NonNull BaseListAdapter.ViewHolder viewHolder, int position) {
         EventEntity event = events.get(position);
         EventViewHolder eventHolder = (EventViewHolder) viewHolder;
-        eventHolder.setDate(event.getMonth() + "." + event.getDay() + ".");
+        eventHolder.setDate(event.getDateString());
 
         List<String> otherPersonIds = new ArrayList<>();
         for (String personId: event.getPersonIds()) {
